@@ -1,0 +1,8 @@
+
+support:
+    database:
+        type: "tinydb"
+        path: "/tmp/data_manager_db.json"
+
+verbose: True
+verbose_info: True
