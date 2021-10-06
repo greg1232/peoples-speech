@@ -4,5 +4,9 @@ support:
         type: "tinydb"
         path: "/tmp/data_manager_db.json"
 
+    get_url:
+        expiration: 3600
+
+
 verbose: True
 verbose_info: True

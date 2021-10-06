@@ -29,6 +29,12 @@ def autosplit():
     logger.debug("Splitting data with view: " + str(request.json))
     return { "status" : "ok"}
 
+@app.route('/peoples_speech/get_view', methods=['GET', 'POST'])
+def get_view():
+    logger.debug("Getting view of images: " + str(request.json))
+    view = peoples_speech.get_view(request.json["view"])
+    return { "images" : view["images"]}
+
 if __name__ == '__main__':
     peoples_speech.create_config()
     app.run(host='0.0.0.0')

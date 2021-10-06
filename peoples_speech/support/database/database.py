@@ -9,4 +9,10 @@ class Database:
     def insert(self, entry):
         self.engine.insert(entry)
 
+    def search(self, query):
+        return self.engine.search(query)
+
+    def contains(self, entry):
+        return self.engine.contains(entry)
+
 

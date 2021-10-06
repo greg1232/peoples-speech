@@ -60,5 +60,6 @@ def setup_logging(arguments):
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("botocore").setLevel(logging.WARNING)
     logging.getLogger("smart_open").setLevel(logging.WARNING)
+    logging.getLogger("matplotlib").setLevel(logging.WARNING)
     logging.getLogger("s3transfer").setLevel(logging.WARNING)
 

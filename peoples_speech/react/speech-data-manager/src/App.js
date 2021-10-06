@@ -9,65 +9,100 @@ class App extends React.Component {
         super(props)
         this.state = {
             jsonlines_path : "s3://peoples-speech/examples/prestamo/prestamo.jsonlines",
-            images: [
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ,
-                { img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1", title : "prestamo" } ],
-            view: {}
+            images: [ ],
+            view: {
+                train : true,
+                test : true,
+                labeled : true
+            }
         }
-        this.handlePathUpdate = this.handlePathUpdate.bind(this)
+        this.handlePathUpdate = this.handlePathUpdate.bind(this);
+        this.handleImagesUpdate = this.handleImagesUpdate.bind(this);
+        this.handleTrainUpdate = this.handleTrainUpdate.bind(this);
+        this.handleTestUpdate = this.handleTestUpdate.bind(this);
+        this.handleLabeledUpdate = this.handleLabeledUpdate.bind(this);
     }
 
     handlePathUpdate(path) {
-        console.log("updated path: " + path.target.value)
+        console.log("updated path: " + path.target.value);
         this.setState({jsonlines_path: path.target.value});
+    }
+
+    handleImagesUpdate(data) {
+        let new_images = data["images"].map((path) => ({img: path, title: "uploaded"}));
+        this.setState({images: new_images});
+    }
+
+    handleTrainUpdate() {
+        console.log("updated train: ");
+        var view = {...this.state.view};
+        view.train = !view.train;
+        this.setState({view});
+        this.getView(view);
+    }
+
+    handleTestUpdate() {
+        console.log("updated test: ");
+        var view = {...this.state.view};
+        view.test = !view.test;
+        this.setState({view});
+        this.getView(view);
+    }
+
+    handleLabeledUpdate() {
+        console.log("updated labeled: ");
+        var view = {...this.state.view};
+        view.labeled = !view.labeled;
+        this.setState({view});
+        this.getView(view);
+    }
+
+    upload() {
+        fetch('http://localhost:5000/peoples_speech/upload',
+            {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                headers: {
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({ dataset_path : this.state.jsonlines_path}) // body data type must match "Content-Type" header
+            }
+        )
+        .then(res => res.json())
+        .then((data) => {
+            console.log("Got response: ", data);
+        }).then(() => this.getView(this.state.view))
+        .catch(console.log)
+    }
+
+    getView(view) {
+        fetch('http://localhost:5000/peoples_speech/get_view',
+            {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                headers: {
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({ view : view }) // body data type must match "Content-Type" header
+            }
+        )
+        .then(res => res.json())
+        .then((data) => {
+            console.log("Got response: ", data);
+            this.handleImagesUpdate(data);
+        })
+        .catch(console.log)
     }
 
     render() {
         return <div>
                 <Grid container justifyContent = "center">
                     <TextField id="jsonlines-path" label="Dataset jsonlines path" variant="outlined" value={this.state.jsonlines_path} onChange={this.handlePathUpdate} />
-                    <Button id="upload" variant="contained" onClick={() =>
+                    <Button id="upload" variant="contained" onClick={ () =>
                         {
-                            fetch('http://localhost:5000/peoples_speech/upload',
-                                {
-                                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                      // 'Content-Type': 'application/x-www-form-urlencoded',
-                                    },
-                                    body: JSON.stringify({ dataset_path : this.state.jsonlines_path}) // body data type must match "Content-Type" header
-                                }
-                            )
-                            .then(res => res.json())
-                            .then((data) => {
-                                console.log("Got response: ", data);
-                            })
-                            .catch(console.log)
+                            this.upload();
                         }}>
                         Upload
                     </Button>
@@ -118,10 +153,9 @@ class App extends React.Component {
                 </Grid>
                 <Grid container justifyContent = "center">
                     <FormGroup>
-                      <FormControlLabel control={<Checkbox defaultChecked />} label="Train" />
-                      <FormControlLabel control={<Checkbox defaultChecked />} label="Test" />
-                      <FormControlLabel control={<Checkbox defaultChecked />} label="Raw" />
-                      <FormControlLabel control={<Checkbox defaultChecked />} label="Labeled" />
+                      <FormControlLabel control={<Checkbox defaultChecked />} onClick={this.handleTrainUpdate} label="Train" />
+                      <FormControlLabel control={<Checkbox defaultChecked />} onClick={this.handleTestUpdate} label="Test" />
+                      <FormControlLabel control={<Checkbox defaultChecked />} onClick={this.handleLabeledUpdate} label="Labeled" />
                     </FormGroup>
                 </Grid>
                 <br />
@@ -130,10 +164,9 @@ class App extends React.Component {
                       {this.state.images.map((item) => (
                         <ImageListItem key={item.img}>
                           <img
-                            src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                            srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                            src={`${item.img}`}
+                            srcSet={`${item.img}`}
                             alt={item.title}
-                            loading="lazy"
                           />
                         </ImageListItem>
                       ))}

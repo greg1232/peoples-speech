@@ -4,3 +4,5 @@ python-configuration[yaml]
 smart_open[s3]
 jsonlines
 tinydb
+matplotlib
+soundfile
