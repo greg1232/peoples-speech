@@ -2,7 +2,7 @@
 import React from 'react';
 import { TextField, Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button } from '@material-ui/core';
 
-class DataManager extends React.Component {
+export default class DataManager extends React.Component {
     constructor(props){
         super(props)
         this.state = {
@@ -10,8 +10,8 @@ class DataManager extends React.Component {
             images: [ ],
             view: {
                 split: {
-                    train : true,
-                    test : true
+                    train : false,
+                    test : false
                 },
                 labels: {
                     labeled : true
@@ -79,6 +79,13 @@ class DataManager extends React.Component {
     }
 
     getView(view) {
+        if(!view.split.train) {
+            delete view.split.train;
+        }
+        if(!view.split.test) {
+            delete view.split.test;
+        }
+
         fetch('http://localhost:5000/peoples_speech/get_view',
             {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -155,8 +162,8 @@ class DataManager extends React.Component {
                 </Grid>
                 <Grid container justifyContent = "center">
                     <FormGroup>
-                      <FormControlLabel control={<Checkbox defaultChecked />} onClick={this.handleTrainUpdate} label="Train" />
-                      <FormControlLabel control={<Checkbox defaultChecked />} onClick={this.handleTestUpdate} label="Test" />
+                      <FormControlLabel control={<Checkbox />} onClick={this.handleTrainUpdate} label="Train" />
+                      <FormControlLabel control={<Checkbox />} onClick={this.handleTestUpdate} label="Test" />
                       <FormControlLabel control={<Checkbox defaultChecked />} onClick={this.handleLabeledUpdate} label="Labeled" />
                     </FormGroup>
                 </Grid>

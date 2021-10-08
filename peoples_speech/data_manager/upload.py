@@ -18,7 +18,7 @@ def upload(jsonlines_path):
 
     config = get_config()
 
-    database = Database(config)
+    database = Database(config["data_manager"]["table_name"], config)
 
     with open(jsonlines_path) as jsonlines_file:
         with jsonlines.Reader(jsonlines_file) as jsonlines_reader:

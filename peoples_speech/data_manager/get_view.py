@@ -12,7 +12,7 @@ def get_view(view):
 
     config = get_config()
 
-    database = Database(config)
+    database = Database(config["data_manager"]["table_name"], config)
 
     logger.debug("Searching for view: " + str(view))
 

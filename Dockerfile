@@ -13,10 +13,16 @@ RUN npm install @material-ui/core@next && \
     npm install @emotion/react && \
     npm install @emotion/styled
 
+RUN npm install @material-ui/icons@next
+RUN npm install @material-ui/styles@next
+
 # Install peakjs
 RUN npm install peaks.js && \
     npm install konva && \
     npm install waveform-data
+
+# Install react router
+RUN npm install react-router-dom
 
 RUN apt-get install -yqq libsndfile1
 

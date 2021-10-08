@@ -1,0 +1,17 @@
+
+model:
+    type: "keyword"
+    label: "prestamo"
+    repeat: 32
+    batch_size: 2
+    epochs: 10
+
+    save_path: "s3://peoples-speech/models/prestamo/15b8b34a77992a5866eaf00ac0ceab35"
+
+dataset:
+    path: "s3://peoples-speech/datasets/prestamo/15b8b34a77992a5866eaf00ac0ceab35.jsonlines"
+
+verbose: True
+verbose_info: True
+
+aws_region: us-east-2

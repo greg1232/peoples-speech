@@ -7,6 +7,26 @@ support:
     get_url:
         expiration: 3600
 
+data_manager:
+    table_name: "data"
+
+    autosplit:
+        seed: 42
+        train_percent: 50.0
+
+    export:
+        table_name: "exported"
+        path: "s3://peoples-speech/datasets/prestamo"
+
+model_iteration:
+    training_path: "s3://peoples-speech/models/prestamo"
+    job_table_name: "training_jobs"
+
+    trainer:
+        type: "local"
+
+credentials:
+    path: '/Users/greg/.aws/credentials'
 
 verbose: True
 verbose_info: True

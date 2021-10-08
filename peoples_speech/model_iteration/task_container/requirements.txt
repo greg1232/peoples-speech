@@ -1,9 +1,4 @@
-flask
-flask_cors
 python-configuration[yaml]
 smart_open[s3]
 jsonlines
-tinydb
-matplotlib
-soundfile
-docker
+tensorflow-io==0.21.0

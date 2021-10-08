@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /bin/bash
 
 # Safely execute this bash script
 # e exit on first failure
@@ -27,13 +27,8 @@ function parse_yaml {
    }'
 }
 
-eval $(parse_yaml $LOCAL_DIRECTORY/../peoples_speech/configs/peoples_speech.yaml "")
+eval $(parse_yaml $LOCAL_DIRECTORY/../peoples_speech_tasks/configs/peoples_speech_tasks_config.yaml "")
+export AWS_REGION
 
-#PASS=$(aws ecr get-login-password --region ${AWS_REGION})
-
-#echo $PASS | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_URL}
-
-#docker pull ${AWS_ECR_REGISTRY_URL}/peoples-speech:latest
-
-docker run --rm -it -p 3000:3000 -p 5000:5000 -v $HOME/.aws/credentials:/root/.aws/credentials:ro -v /var/run/docker.sock:/var/run/docker.sock peoples-speech:latest
-
+# Start the dev environment
+PYTHONPATH=$LOCAL_DIRECTORY/.. python train.py
