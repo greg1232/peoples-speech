@@ -41,7 +41,7 @@ export default class ModelIteration extends React.Component {
     }
 
     refresh() {
-        fetch('http://localhost:5000/peoples_speech/get_training_jobs',
+        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/get_training_jobs',
             {
                 method: 'GET', // *GET, POST, PUT, DELETE, etc.
                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -56,7 +56,7 @@ export default class ModelIteration extends React.Component {
             this.handleJobUpdate(data);
         })
         .catch(console.log)
-        fetch('http://localhost:5000/peoples_speech/get_exported_datasets',
+        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/get_exported_datasets',
             {
                 method: 'GET', // *GET, POST, PUT, DELETE, etc.
                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -105,7 +105,7 @@ export default class ModelIteration extends React.Component {
                 <Grid container justifyContent = "center">
                     <Button id="train" variant="contained" onClick={ () =>
                         {
-                            fetch('http://localhost:5000/peoples_speech/train',
+                            fetch(process.env.REACT_APP_API_URL + '/peoples_speech/train',
                                 {
                                     method: 'POST', // *GET, POST, PUT, DELETE, etc.
                                     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached

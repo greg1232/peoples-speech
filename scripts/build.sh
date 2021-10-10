@@ -1,1 +1,1 @@
-docker build -t peoples-speech:latest .
+docker build --target development -t peoples-speech:latest .

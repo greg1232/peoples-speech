@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.9 as base
 
 RUN apt-get -yq update && apt-get install -yqq npm
 
@@ -24,6 +24,9 @@ RUN npm install peaks.js && \
 # Install react router
 RUN npm install react-router-dom
 
+# Install environment
+RUN npm install env-cmd
+
 RUN apt-get install -yqq libsndfile1
 
 WORKDIR /app
@@ -31,9 +34,20 @@ COPY ./requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
 COPY . /app
+WORKDIR /app
+
+# Developement target
+FROM base as development
 
 RUN chmod a+x /app/scripts/start-dev.sh
 
-WORKDIR /app
 ENTRYPOINT ["/app/scripts/start-dev.sh"]
+
+# Staging target
+FROM base as staging
+
+RUN chmod a+x /app/scripts/start-staging.sh
+
+ENTRYPOINT ["/app/scripts/start-staging.sh"]
+
 

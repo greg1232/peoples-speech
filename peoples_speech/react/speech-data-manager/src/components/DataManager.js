@@ -69,7 +69,7 @@ export default class DataManager extends React.Component {
     }
 
     upload() {
-        fetch('http://localhost:5000/peoples_speech/upload',
+        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/upload',
             {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -95,7 +95,7 @@ export default class DataManager extends React.Component {
             delete view.split.test;
         }
 
-        fetch('http://localhost:5000/peoples_speech/get_view',
+        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/get_view',
             {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -132,7 +132,7 @@ export default class DataManager extends React.Component {
                 <Grid container justifyContent = "center">
                     <Button id="autosplit" variant="contained" onClick={() =>
                         {
-                            fetch('http://localhost:5000/peoples_speech/autosplit',
+                            fetch(process.env.REACT_APP_API_URL + '/peoples_speech/autosplit',
                                 {
                                     method: 'POST', // *GET, POST, PUT, DELETE, etc.
                                     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -153,7 +153,7 @@ export default class DataManager extends React.Component {
                     </Button>
                     <Button id="export" variant="contained" onClick={() =>
                         {
-                            fetch('http://localhost:5000/peoples_speech/export',
+                            fetch(process.env.REACT_APP_API_URL + '/peoples_speech/export',
                                 {
                                     method: 'POST', // *GET, POST, PUT, DELETE, etc.
                                     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
