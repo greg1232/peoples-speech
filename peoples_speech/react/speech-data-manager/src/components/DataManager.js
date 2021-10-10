@@ -23,6 +23,15 @@ export default class DataManager extends React.Component {
         this.handleTrainUpdate = this.handleTrainUpdate.bind(this);
         this.handleTestUpdate = this.handleTestUpdate.bind(this);
         this.handleLabeledUpdate = this.handleLabeledUpdate.bind(this);
+        this.handleImageClick= this.handleImageClick.bind(this);
+    }
+
+    handleImageClick(item) {
+        if (item.selected === 1)
+            item.selected = 0;
+        else
+            item.selected = 1;
+        this.setState({images: this.state.images});
     }
 
     handlePathUpdate(path) {
@@ -31,7 +40,7 @@ export default class DataManager extends React.Component {
     }
 
     handleImagesUpdate(data) {
-        let new_images = data["images"].map((path) => ({img: path, title: "uploaded"}));
+        let new_images = data["images"].map((image) => ({img: image["url"], uid: image["uid"], title: "uploaded", selected: 0}));
         this.setState({images: new_images});
     }
 
@@ -105,6 +114,10 @@ export default class DataManager extends React.Component {
         .catch(console.log)
     }
 
+    componentDidMount() {
+        this.getView(this.state.view);
+    }
+
     render() {
         return <div>
                 <Grid container justifyContent = "center">
@@ -148,7 +161,7 @@ export default class DataManager extends React.Component {
                                       'Content-Type': 'application/json'
                                       // 'Content-Type': 'application/x-www-form-urlencoded',
                                     },
-                                    body: JSON.stringify({ view : this.state.view}) // body data type must match "Content-Type" header
+                                    body: JSON.stringify({ view : this.state.view, images: this.state.images}) // body data type must match "Content-Type" header
                                 }
                             )
                             .then(res => res.json())
@@ -171,12 +184,12 @@ export default class DataManager extends React.Component {
                 <Grid container justifyContent = "center">
                     <ImageList sx={{ width: 1000, height: 450 }} cols={6} rowHeight={164}>
                       {this.state.images.map((item) => (
-                        <ImageListItem key={item.img}>
-                          <img
-                            src={`${item.img}`}
-                            srcSet={`${item.img}`}
-                            alt={item.title}
-                          />
+                        <ImageListItem key={item.img} sx={{ border: item.selected }} onClick={() => this.handleImageClick(item)}>
+                            <img
+                                src={`${item.img}`}
+                                srcSet={`${item.img}`}
+                                alt={item.title}
+                            />
                         </ImageListItem>
                       ))}
                     </ImageList>

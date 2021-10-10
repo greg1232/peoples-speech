@@ -8,8 +8,8 @@ import tensorflow_io as tfio
 
 AUTOTUNE = tf.data.AUTOTUNE
 
-def get_dataset(config):
-    file_dataset = load_dataset_file(config)
+def get_dataset(config, key):
+    file_dataset = load_dataset_file(config, key)
 
     waveform_ds = file_dataset.map(get_waveform_and_label, num_parallel_calls=AUTOTUNE)
     spectrogram_ds = waveform_ds.map(
@@ -21,17 +21,20 @@ def get_dataset(config):
 
     return spectrogram_ds
 
-def load_dataset_file(config):
-    tf_generator = lambda: (row for row in dataset_file_generator(config))
+def load_dataset_file(config, key):
+    tf_generator = lambda: (row for row in dataset_file_generator(config, key))
     return tf.data.Dataset.from_generator(tf_generator,
         output_signature=(
             tf.TensorSpec(shape=(), dtype=tf.string),
             tf.TensorSpec(shape=(), dtype=tf.int32)))
 
-def dataset_file_generator(config):
+def dataset_file_generator(config, key):
     with open(config["dataset"]["path"]) as dataset_file:
         with jsonlines.Reader(dataset_file) as dataset_reader:
             for line in dataset_reader:
+                if not line[key]:
+                    continue
+
                 with open(line["label_path"]) as label_file:
                     label = json.load(label_file)["label"]
                 yield line["audio_path"], get_label(config, label)

@@ -7,9 +7,9 @@ logger = logging.getLogger(__name__)
 
 global_config = None
 
-def create_config():
+def create_config(arguments):
     global global_config
-    global_config = setup_config({})
+    global_config = setup_config(arguments)
 
     setup_logging(global_config)
 
@@ -17,17 +17,17 @@ def create_config():
 
     return global_config
 
-def get_config():
+def get_config(arguments):
     global global_config
     if global_config is None:
-        create_config()
+        create_config(arguments)
     return global_config
 
 def setup_config(dictionary = {}):
     return config.ConfigurationSet(
+        config.config_from_dict(dictionary),
         config.config_from_env(prefix="PEOPLES_SPEECH_TASKS"),
         config.config_from_yaml(config_path(), read_from_file=True),
-        config.config_from_dict(dictionary),
     )
 
 def config_path():

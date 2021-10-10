@@ -9,16 +9,26 @@ export default class ModelIteration extends React.Component {
         super(props)
         this.state = {
             datasets : [],
+            dataset: "",
             model : {},
             jobs: []
         }
         this.handleDatasetsUpdate = this.handleDatasetsUpdate.bind(this);
+        this.handleDatasetUpdate = this.handleDatasetUpdate.bind(this);
         this.handleJobUpdate = this.handleJobUpdate.bind(this);
     }
 
     handleDatasetsUpdate(datasets) {
         console.log("updated path: " + datasets);
         this.setState({datasets: datasets["datasets"]});
+        if (datasets.length > 0) {
+            this.setState({dataset: datasets[0].path});
+        }
+    }
+
+    handleDatasetUpdate(dataset) {
+        console.log("updated path: " + dataset.target.value);
+        this.setState({dataset: dataset.target.value});
     }
 
     handleJobUpdate(jobs) {
@@ -26,41 +36,49 @@ export default class ModelIteration extends React.Component {
         this.setState({jobs: jobs["jobs"]});
     }
 
+    componentDidMount() {
+        this.refresh();
+    }
+
+    refresh() {
+        fetch('http://localhost:5000/peoples_speech/get_training_jobs',
+            {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+            }
+        )
+        .then(res => res.json())
+        .then((data) => {
+            console.log("Got response: ", data);
+            this.handleJobUpdate(data);
+        })
+        .catch(console.log)
+        fetch('http://localhost:5000/peoples_speech/get_exported_datasets',
+            {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+            }
+        )
+        .then(res => res.json())
+        .then((data) => {
+            console.log("Got response: ", data);
+            this.handleDatasetsUpdate(data);
+        })
+        .catch(console.log)
+    }
+
     render() {
         return <div>
                 <Grid container justifyContent = "center">
                     <Button id="refresh" variant="contained" onClick={ () =>
                         {
-                            fetch('http://localhost:5000/peoples_speech/get_training_jobs',
-                                {
-                                    method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                    }
-                                }
-                            )
-                            .then(res => res.json())
-                            .then((data) => {
-                                console.log("Got response: ", data);
-                                this.handleJobUpdate(data);
-                            })
-                            .catch(console.log)
-                            fetch('http://localhost:5000/peoples_speech/get_exported_datasets',
-                                {
-                                    method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                    }
-                                }
-                            )
-                            .then(res => res.json())
-                            .then((data) => {
-                                console.log("Got response: ", data);
-                                this.handleDatasetsUpdate(data);
-                            })
-                            .catch(console.log)
+                            this.refresh();
                         }}>
                         Refresh
                     </Button>
@@ -77,7 +95,7 @@ export default class ModelIteration extends React.Component {
                                   onChange={this.handleDatasetUpdate}
                                 >
                             {this.state.datasets.map((dataset) => (
-                              <MenuItem value={dataset.id}>{dataset.id}</MenuItem>
+                              <MenuItem value={dataset.path}>{dataset.id}</MenuItem>
                             ))}
 
                                 </Select>
@@ -94,12 +112,13 @@ export default class ModelIteration extends React.Component {
                                     headers: {
                                       'Content-Type': 'application/json'
                                     },
-                                    body: JSON.stringify({ model : this.state.model }) // body data type must match "Content-Type" header
+                                    body: JSON.stringify({ model : this.state.model, dataset: this.state.dataset }) // body data type must match "Content-Type" header
                                 }
                             )
                             .then(res => res.json())
                             .then((data) => {
                                 console.log("Got response: ", data);
+                                this.refresh();
                             })
                             .catch(console.log)
                         }}>
@@ -112,6 +131,7 @@ export default class ModelIteration extends React.Component {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Model Name</TableCell>
+                                <TableCell align="right">Accuracy</TableCell>
                                 <TableCell align="right">Status</TableCell>
                             </TableRow>
                         </TableHead>
@@ -124,6 +144,7 @@ export default class ModelIteration extends React.Component {
                                 <TableCell component="th" scope="row">
                                   {row.train_config_path}
                                 </TableCell>
+                                <TableCell align="right">{row.accuracy}</TableCell>
                                 <TableCell align="right">{row.status}</TableCell>
                               </TableRow>
                             ))}

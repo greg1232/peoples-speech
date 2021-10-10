@@ -7,6 +7,7 @@ model:
     epochs: 10
 
     save_path: "s3://peoples-speech/models/prestamo/15b8b34a77992a5866eaf00ac0ceab35"
+    results_path: "s3://peoples-speech/models/prestamo/15b8b34a77992a5866eaf00ac0ceab35/results.json"
 
 dataset:
     path: "s3://peoples-speech/datasets/prestamo/15b8b34a77992a5866eaf00ac0ceab35.jsonlines"

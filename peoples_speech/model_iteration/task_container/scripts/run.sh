@@ -31,4 +31,4 @@ eval $(parse_yaml $LOCAL_DIRECTORY/../peoples_speech_tasks/configs/peoples_speec
 export AWS_REGION
 
 # Start the dev environment
-PYTHONPATH=$LOCAL_DIRECTORY/.. python train.py
+PYTHONPATH=$LOCAL_DIRECTORY/.. python train.py $@

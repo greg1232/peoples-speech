@@ -20,7 +20,10 @@ def get_view(view):
 
     logger.debug("Got database results: " + str(results))
 
-    images = [ get_url(result["image_path"], config["support"]["get_url"]["expiration"]) for result in results ]
+    images = [ {
+        "url" : get_url(result["image_path"], config["support"]["get_url"]["expiration"]),
+        "uid" : result["uid"] }
+        for result in results ]
 
     return { "images" : images }
 

@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from peoples_speech.support.database import Database
 from peoples_speech.util.config import get_config
 
+import hashlib
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -25,17 +27,29 @@ def upload(jsonlines_path):
             for entry in jsonlines_reader:
                 entry["train"] = False
                 entry["test"] = False
+                entry["uid"] = get_uid(entry["audio_path"])
                 entry["labeled"] = len(entry["label_path"]) > 0
-                if not database.contains(entry):
+                if not database.contains({"audio_path" : entry["audio_path"]}):
                     make_image(entry)
                     logger.debug("Inserted entry: " + str(entry))
                     database.insert(entry)
 
+def get_uid(path):
+    hash_md5 = hashlib.md5()
+    hash_md5.update(path.encode("utf-8"))
+    return hash_md5.hexdigest()
+
 def make_image(entry):
-    with open(entry["audio_path"], "rb") as audio_file:
-        audio_data, sample_rate = sf.read(audio_file)
 
     image_path = os.path.splitext(entry["audio_path"])[0] + ".png"
+
+    entry["image_path"] = image_path
+
+    if exists(image_path):
+        return
+
+    with open(entry["audio_path"], "rb") as audio_file:
+        audio_data, sample_rate = sf.read(audio_file)
 
     with open(image_path, "wb") as image_file:
         # plot the first 1024 samples
@@ -44,9 +58,16 @@ def make_image(entry):
         plt.ylabel("Amplitude")
         plt.xlabel("Time")
         # set the title
-        plt.title(entry["audio_path"])
+        plt.title(os.path.split(entry["audio_path"])[1])
         # display the plot
         plt.savefig(image_file)
+        plt.clf()
 
-    entry["image_path"] = image_path
+def exists(path):
+    try:
+        with open(path, "rb") as audio_file:
+            return True
+
+    except ValueError:
+        return False
 

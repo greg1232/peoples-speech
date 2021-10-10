@@ -43,14 +43,22 @@ def view_to_query(view_group):
 
         local_query = None
         for k, v in view.items():
-            if local_query is None:
-                local_query = Query()[k] == v
+            if isinstance(v, list):
+                for item in v:
+                    if local_query is None:
+                        local_query = Query()[k] == item
+                    else:
+                        local_query = local_query | (Query()[k] == item)
+
             else:
-                local_query = local_query | (Query()[k] == v)
+                if local_query is None:
+                    local_query = Query()[k] == v
+                else:
+                    local_query = local_query | (Query()[k] == v)
 
         if query is None:
             query = local_query
-        else:
+        elif local_query is not None:
             query = query & local_query
 
     return query

@@ -43,7 +43,7 @@ class TaskRunner:
 
     def run(self, image):
         logger.debug("Running container...")
-        container = self.docker_client.containers.run(image, detach=True, volumes=
+        container = self.docker_client.containers.run(image, command=self.train_config_path, detach=True, volumes=
             {self.config["credentials"]["path"]: {'bind': '/root/.aws/credentials', 'mode': 'ro'},
              '/var/run/docker.sock': {'bind': '/var/run/docker.sock', 'mode': 'rw'}})
 

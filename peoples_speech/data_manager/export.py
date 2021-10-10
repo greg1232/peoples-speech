@@ -13,16 +13,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def export(view):
+def export(view, images):
     '''Exports a view from the dataset.'''
 
     config = get_config()
 
-    database = Database(config["data_manager"]["table_name"], config)
-
-    logger.debug("Searching for view: " + str(view))
-
-    results = database.search(view)
+    results = get_results(view, images, config)
 
     logger.debug("Got database results: " + str(results))
 
@@ -44,4 +40,21 @@ def export(view):
     exported_database.insert({"id" : hash_md5.hexdigest(), "path" : dataset_path})
 
     return dataset_path
+
+def get_results(view, images, config):
+
+    logger.debug("Searching for view: " + str(view))
+    logger.debug(" with images: " + str(images))
+
+    database = Database(config["data_manager"]["table_name"], config)
+
+    view["selected"] = { "uid" : [] }
+
+    for image in images:
+        if image["selected"] > 0:
+            view["selected"]["uid"].append(image["uid"])
+
+    results = database.search(view)
+
+    return results
 

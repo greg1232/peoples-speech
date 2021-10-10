@@ -22,7 +22,7 @@ def upload():
 @app.route('/peoples_speech/export', methods=['GET', 'POST'])
 def export():
     logger.debug("Exporting data with view: " + str(request.json))
-    path = peoples_speech.export(request.json["view"])
+    path = peoples_speech.export(request.json["view"], request.json["images"])
     return { "path" : path}
 
 @app.route('/peoples_speech/autosplit', methods=['GET', 'POST'])
@@ -40,7 +40,7 @@ def get_view():
 @app.route('/peoples_speech/train', methods=['GET', 'POST'])
 def train():
     logger.debug("Training new model: " + str(request.json))
-    model = peoples_speech.train(request.json["model"])
+    model = peoples_speech.train(request.json)
     return { "model" : model}
 
 @app.route('/peoples_speech/get_training_jobs', methods=['GET', 'POST'])
