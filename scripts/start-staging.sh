@@ -27,5 +27,5 @@ REACT_DEV_ENVIRONMENT=$LOCAL_DIRECTORY/../peoples_speech/react/speech-data-manag
 PYTHONPATH=$LOCAL_DIRECTORY/.. python $FLASK_APP &
 
 cd $REACT_DEV_ENVIRONMENT
-COLOR=1 npm start:staging | cat &
+COLOR=1 npm run start:staging | cat &
 wait

@@ -26,7 +26,7 @@ model_iteration:
         type: "local"
 
 credentials:
-    path: '/Users/greg/.aws/credentials'
+    path: '/home/ubuntu/.aws/credentials'
 
 verbose: True
 verbose_info: True
