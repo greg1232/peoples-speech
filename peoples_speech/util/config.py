@@ -24,7 +24,7 @@ def get_config():
 
 def setup_config(dictionary = {}):
     return config.ConfigurationSet(
-        config.config_from_env(prefix="PEOPLES_SPEECH"),
+        config.config_from_env(prefix="PEOPLES_SPEECH", separator="_", lowercase_keys=True),
         config.config_from_yaml(config_path(), read_from_file=True),
         config.config_from_dict(dictionary),
     )

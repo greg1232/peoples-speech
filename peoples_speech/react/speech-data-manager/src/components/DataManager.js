@@ -175,9 +175,9 @@ export default class DataManager extends React.Component {
                 </Grid>
                 <Grid container justifyContent = "center">
                     <FormGroup>
-                      <FormControlLabel control={<Checkbox />} onClick={this.handleTrainUpdate} label="Train" />
-                      <FormControlLabel control={<Checkbox />} onClick={this.handleTestUpdate} label="Test" />
-                      <FormControlLabel control={<Checkbox defaultChecked />} onClick={this.handleLabeledUpdate} label="Labeled" />
+                      <FormControlLabel control={<Checkbox onClick={this.handleTrainUpdate} />} label="Train" />
+                      <FormControlLabel control={<Checkbox onClick={this.handleTestUpdate} />} label="Test" />
+                      <FormControlLabel control={<Checkbox onClick={this.handleLabeledUpdate} defaultChecked />} label="Labeled" />
                     </FormGroup>
                 </Grid>
                 <br />
