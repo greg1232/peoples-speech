@@ -19,6 +19,12 @@ def upload():
     peoples_speech.upload(request.json["dataset_path"])
     return { "status" : "ok" }
 
+@app.route('/peoples_speech/set_labels', methods=['GET', 'POST'])
+def set_labels():
+    logger.debug("Saving new labels: " + str(request.json))
+    peoples_speech.set_labels(request.json["view"], request.json["images"], request.json["label"])
+    return { "status" : "ok"}
+
 @app.route('/peoples_speech/export', methods=['GET', 'POST'])
 def export():
     logger.debug("Exporting data with view: " + str(request.json))

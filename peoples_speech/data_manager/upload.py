@@ -1,6 +1,7 @@
 
 from smart_open import open
 import jsonlines
+import json
 import os
 
 import soundfile as sf
@@ -29,6 +30,8 @@ def upload(jsonlines_path):
                 entry["test"] = False
                 entry["uid"] = get_uid(entry["audio_path"])
                 entry["labeled"] = len(entry["label_path"]) > 0
+                with open(entry["label_path"]) as label_file:
+                    entry["label"] = json.load(label_file)["label"]
                 if not database.contains({"audio_path" : entry["audio_path"]}):
                     make_image(entry)
                     logger.debug("Inserted entry: " + str(entry))

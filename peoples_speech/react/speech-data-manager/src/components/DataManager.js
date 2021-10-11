@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { TextField, Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button } from '@material-ui/core';
+import { TextField, Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, ImageListItemBar } from '@material-ui/core';
+import LabelDialog from './LabelDialog'
 
 export default class DataManager extends React.Component {
     constructor(props){
@@ -24,6 +25,7 @@ export default class DataManager extends React.Component {
         this.handleTestUpdate = this.handleTestUpdate.bind(this);
         this.handleLabeledUpdate = this.handleLabeledUpdate.bind(this);
         this.handleImageClick= this.handleImageClick.bind(this);
+        this.getView = this.getView.bind(this);
     }
 
     handleImageClick(item) {
@@ -40,7 +42,7 @@ export default class DataManager extends React.Component {
     }
 
     handleImagesUpdate(data) {
-        let new_images = data["images"].map((image) => ({img: image["url"], uid: image["uid"], title: "uploaded", selected: 0}));
+        let new_images = data["images"].map((image) => ({label: image["label"], img: image["url"], uid: image["uid"], title: "uploaded", selected: 0}));
         this.setState({images: new_images});
     }
 
@@ -130,6 +132,7 @@ export default class DataManager extends React.Component {
                     </Button>
                 </Grid>
                 <Grid container justifyContent = "center">
+                    <LabelDialog images={this.state.images} view={this.state.view} getView={this.getView} />
                     <Button id="autosplit" variant="contained" onClick={() =>
                         {
                             fetch(process.env.REACT_APP_API_URL + '/peoples_speech/autosplit',
@@ -190,6 +193,9 @@ export default class DataManager extends React.Component {
                                 srcSet={`${item.img}`}
                                 alt={item.title}
                             />
+                            <ImageListItemBar
+                                title={item.label}
+                              ImageListItemBar />
                         </ImageListItem>
                       ))}
                     </ImageList>
@@ -197,4 +203,7 @@ export default class DataManager extends React.Component {
             </div>;
     }
 }
+
+
+
 
