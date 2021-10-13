@@ -2,6 +2,7 @@
 import React from 'react';
 import { TextField, Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, ImageListItemBar } from '@material-ui/core';
 import LabelDialog from './LabelDialog'
+import AudioButton from './AudioButton'
 
 export default class DataManager extends React.Component {
     constructor(props){
@@ -42,7 +43,13 @@ export default class DataManager extends React.Component {
     }
 
     handleImagesUpdate(data) {
-        let new_images = data["images"].map((image) => ({label: image["label"], img: image["url"], uid: image["uid"], title: "uploaded", selected: 0}));
+        let new_images = data["images"].map((image) => ({
+            label: image["label"],
+            img: image["url"],
+            audio : image["audio_url"],
+            uid: image["uid"],
+            title: "uploaded",
+            selected: 0}));
         this.setState({images: new_images});
     }
 
@@ -123,7 +130,9 @@ export default class DataManager extends React.Component {
     render() {
         return <div>
                 <Grid container justifyContent = "center">
-                    <TextField id="jsonlines-path" label="Dataset jsonlines path" variant="outlined" value={this.state.jsonlines_path} onChange={this.handlePathUpdate} />
+                    <TextField id="jsonlines-path" label="Dataset jsonlines path"
+                        variant="outlined" value={this.state.jsonlines_path}
+                        onChange={this.handlePathUpdate} />
                     <Button id="upload" variant="contained" onClick={ () =>
                         {
                             this.upload();
@@ -195,7 +204,10 @@ export default class DataManager extends React.Component {
                             />
                             <ImageListItemBar
                                 title={item.label}
-                              ImageListItemBar />
+                                actionIcon={
+                                    <AudioButton url={`${item.audio}`} />
+                                }
+                            />
                         </ImageListItem>
                       ))}
                     </ImageList>

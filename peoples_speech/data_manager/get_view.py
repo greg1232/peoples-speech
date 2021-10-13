@@ -22,6 +22,7 @@ def get_view(view):
 
     images = [ {
         "url" : get_url(result["image_path"], config["support"]["get_url"]["expiration"]),
+        "audio_url" : get_url(result["audio_path"], config["support"]["get_url"]["expiration"]),
         "uid" : result["uid"],
         "label" : result["label"] }
         for result in results ]

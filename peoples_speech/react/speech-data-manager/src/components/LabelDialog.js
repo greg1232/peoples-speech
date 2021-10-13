@@ -41,7 +41,10 @@ export default class LabelDialog extends React.Component {
                   'Content-Type': 'application/json'
                   // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify({ view : this.props.view, images : this.props.images, label : this.state.label}) // body data type must match "Content-Type" header
+                body: JSON.stringify({
+                    view : this.props.view,
+                    images : this.props.images,
+                    label : this.state.label}) // body data type must match "Content-Type" header
             }
         )
         .then(res => res.json())
