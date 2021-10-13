@@ -12,29 +12,33 @@ import Home from './components/Home'
 import Deploy from './components/Deploy'
 
 class App extends React.Component {
-  render() {
-    return (
-      <div>
-        <ButtonAppBar />
-        <Router>
+    componentDidMount(){
+      document.title = "Peoples Speech Platform"
+    }
+
+    render() {
+        return (
             <div>
-                  <Link to="/"><Button color="inherit">Home</Button></Link>
-                  <Link to="/data"><Button color="inherit">Data</Button></Link>
-                  <Link to="/model"><Button color="inherit">Model</Button></Link>
-                  <Link to="/deploy"><Button color="inherit">Deploy</Button></Link>
+                <ButtonAppBar />
+                    <Router>
+                        <div>
+                              <Link to="/"><Button color="inherit">Home</Button></Link>
+                              <Link to="/data"><Button color="inherit">Data</Button></Link>
+                              <Link to="/model"><Button color="inherit">Model</Button></Link>
+                              <Link to="/deploy"><Button color="inherit">Deploy</Button></Link>
 
-              <hr />
+                          <hr />
 
-              <Route exact path="/" component={Home} />
-              <Route path="/data" component={DataManager} />
-              <Route path="/model" component={ModelIteration} />
-              <Route path="/deploy" component={Deploy} />
+                          <Route exact path="/" component={Home} />
+                          <Route path="/data" component={DataManager} />
+                          <Route path="/model" component={ModelIteration} />
+                          <Route path="/deploy" component={Deploy} />
+                        </div>
+                    </Router>
+                <MyButton/>
             </div>
-          </Router>
-        <MyButton/>
-      </div>
-    );
-  }
+        );
+    }
 }
 
 export default App;
