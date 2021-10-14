@@ -76,14 +76,6 @@ export default class ModelIteration extends React.Component {
     render() {
         return <div>
                 <Grid container justifyContent = "center">
-                    <Button id="refresh" variant="contained" onClick={ () =>
-                        {
-                            this.refresh();
-                        }}>
-                        Refresh
-                    </Button>
-                </Grid>
-                <Grid container justifyContent = "center">
                     <Box sx={{ minWidth: 120 }}>
                         <FormControl fullWidth>
                             <InputLabel id="dataset">Dataset</InputLabel>
@@ -103,27 +95,37 @@ export default class ModelIteration extends React.Component {
                     </Box>
                 </Grid>
                 <Grid container justifyContent = "center">
-                    <Button id="train" variant="contained" onClick={ () =>
-                        {
-                            fetch(process.env.REACT_APP_API_URL + '/peoples_speech/train',
-                                {
-                                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({ model : this.state.model, dataset: this.state.dataset }) // body data type must match "Content-Type" header
-                                }
-                            )
-                            .then(res => res.json())
-                            .then((data) => {
-                                console.log("Got response: ", data);
+                    <Box m={1}>
+                        <Button id="train" variant="contained" onClick={ () =>
+                            {
+                                fetch(process.env.REACT_APP_API_URL + '/peoples_speech/train',
+                                    {
+                                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                                        headers: {
+                                          'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({ model : this.state.model, dataset: this.state.dataset }) // body data type must match "Content-Type" header
+                                    }
+                                )
+                                .then(res => res.json())
+                                .then((data) => {
+                                    console.log("Got response: ", data);
+                                    this.refresh();
+                                })
+                                .catch(console.log)
+                            }}>
+                            Train
+                        </Button>
+                    </Box>
+                    <Box m={1}>
+                        <Button id="refresh" variant="contained" onClick={ () =>
+                            {
                                 this.refresh();
-                            })
-                            .catch(console.log)
-                        }}>
-                        Train
-                    </Button>
+                            }}>
+                            Refresh
+                        </Button>
+                    </Box>
                 </Grid>
 
                 <TableContainer component={Paper}>

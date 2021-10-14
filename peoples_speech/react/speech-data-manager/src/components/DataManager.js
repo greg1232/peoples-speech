@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { TextField, Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, ImageListItemBar } from '@material-ui/core';
+import { TextField, Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, Box, ImageListItemBar } from '@material-ui/core';
 import LabelDialog from './LabelDialog'
 import ExportDialog from './ExportDialog'
 import AudioButton from './AudioButton'
@@ -133,38 +133,47 @@ export default class DataManager extends React.Component {
                 <Grid container justifyContent = "center">
                     <TextField id="jsonlines-path" label="Dataset jsonlines path"
                         variant="outlined" value={this.state.jsonlines_path}
-                        onChange={this.handlePathUpdate} />
-                    <Button id="upload" variant="contained" onClick={ () =>
-                        {
-                            this.upload();
-                        }}>
-                        Upload
-                    </Button>
+                        onChange={this.handlePathUpdate}
+                        style = {{width: 500}} />
+                    <Box m={1}>
+                        <Button id="upload" variant="contained" onClick={ () =>
+                            {
+                                this.upload();
+                            }}>
+                            Upload
+                        </Button>
+                    </Box>
                 </Grid>
                 <Grid container justifyContent = "center">
-                    <LabelDialog images={this.state.images} view={this.state.view} getView={this.getView} />
-                    <Button id="autosplit" variant="contained" onClick={() =>
-                        {
-                            fetch(process.env.REACT_APP_API_URL + '/peoples_speech/autosplit',
-                                {
-                                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                      // 'Content-Type': 'application/x-www-form-urlencoded',
-                                    },
-                                    body: JSON.stringify({ view : this.state.view}) // body data type must match "Content-Type" header
-                                }
-                            )
-                            .then(res => res.json())
-                            .then((data) => {
-                                console.log("Got response: ", data);
-                            })
-                            .catch(console.log)
-                        }}>
-                        Split
-                    </Button>
-                    <ExportDialog images={this.state.images} view={this.state.view} />
+                    <Box m={1}>
+                        <LabelDialog images={this.state.images} view={this.state.view} getView={this.getView} />
+                    </Box>
+                    <Box m={1}>
+                        <Button id="autosplit" variant="contained" onClick={() =>
+                            {
+                                fetch(process.env.REACT_APP_API_URL + '/peoples_speech/autosplit',
+                                    {
+                                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                                        headers: {
+                                          'Content-Type': 'application/json'
+                                          // 'Content-Type': 'application/x-www-form-urlencoded',
+                                        },
+                                        body: JSON.stringify({ view : this.state.view}) // body data type must match "Content-Type" header
+                                    }
+                                )
+                                .then(res => res.json())
+                                .then((data) => {
+                                    console.log("Got response: ", data);
+                                })
+                                .catch(console.log)
+                            }}>
+                            Split
+                        </Button>
+                    </Box>
+                    <Box m={1}>
+                        <ExportDialog images={this.state.images} view={this.state.view} />
+                    </Box>
                 </Grid>
                 <Grid container justifyContent = "center">
                     <FormGroup>
