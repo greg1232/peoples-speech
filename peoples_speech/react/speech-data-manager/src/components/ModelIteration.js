@@ -9,7 +9,7 @@ export default class ModelIteration extends React.Component {
         super(props)
         this.state = {
             datasets : [],
-            dataset: "",
+            dataset: {},
             model : {},
             jobs: []
         }
@@ -19,15 +19,15 @@ export default class ModelIteration extends React.Component {
     }
 
     handleDatasetsUpdate(datasets) {
-        console.log("updated path: " + datasets);
+        console.log("updated datasets: " + datasets);
         this.setState({datasets: datasets["datasets"]});
         if (datasets.length > 0) {
-            this.setState({dataset: datasets[0].path});
+            this.setState({dataset: datasets[0]});
         }
     }
 
     handleDatasetUpdate(dataset) {
-        console.log("updated path: " + dataset.target.value);
+        console.log("updated dataset: " + dataset.target.value);
         this.setState({dataset: dataset.target.value});
     }
 
@@ -90,13 +90,13 @@ export default class ModelIteration extends React.Component {
                                 <Select
                                   labelId="dataset"
                                   id="dataset"
-                                  value={this.state.dataset_path}
+                                  value={this.state.dataset}
                                   label="dataset"
                                   onChange={this.handleDatasetUpdate}
                                 >
-                            {this.state.datasets.map((dataset) => (
-                              <MenuItem value={dataset.path}>{dataset.id}</MenuItem>
-                            ))}
+                                    {this.state.datasets.map((dataset) => (
+                                      <MenuItem id={dataset.id} value={dataset}>{dataset.name}</MenuItem>
+                                    ))}
 
                                 </Select>
                         </FormControl>
@@ -132,6 +132,8 @@ export default class ModelIteration extends React.Component {
                             <TableRow>
                                 <TableCell>Model Name</TableCell>
                                 <TableCell align="right">Accuracy</TableCell>
+                                <TableCell align="right">Start Time</TableCell>
+                                <TableCell align="right">End Time</TableCell>
                                 <TableCell align="right">Status</TableCell>
                             </TableRow>
                         </TableHead>
@@ -142,9 +144,11 @@ export default class ModelIteration extends React.Component {
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                               >
                                 <TableCell component="th" scope="row">
-                                  {row.train_config_path}
+                                  {row.name}
                                 </TableCell>
-                                <TableCell align="right">{row.accuracy}</TableCell>
+                                <TableCell align="right">{accuracyToFixed(row.accuracy)}</TableCell>
+                                <TableCell align="right">{timestampToString(row.start_time)}</TableCell>
+                                <TableCell align="right">{timestampToString(row.end_time)}</TableCell>
                                 <TableCell align="right">{row.status}</TableCell>
                               </TableRow>
                             ))}
@@ -153,5 +157,20 @@ export default class ModelIteration extends React.Component {
                 </TableContainer>
             </div>;
     }
+}
+
+function accuracyToFixed(accuracy) {
+    if (isNaN(accuracy)) {
+        return accuracy;
+    }
+    return accuracy.toFixed(2)
+}
+
+function timestampToString(timestamp) {
+    if (isNaN(timestamp)) {
+        return timestamp;
+    }
+    var date = new Date(timestamp);
+    return date.toLocaleTimeString("en-US");
 }
 

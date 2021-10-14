@@ -28,7 +28,7 @@ def set_labels():
 @app.route('/peoples_speech/export', methods=['GET', 'POST'])
 def export():
     logger.debug("Exporting data with view: " + str(request.json))
-    path = peoples_speech.export(request.json["view"], request.json["images"])
+    path = peoples_speech.export(request.json["view"], request.json["images"], request.json["name"])
     return { "path" : path}
 
 @app.route('/peoples_speech/autosplit', methods=['GET', 'POST'])

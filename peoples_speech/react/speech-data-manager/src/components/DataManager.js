@@ -2,6 +2,7 @@
 import React from 'react';
 import { TextField, Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, ImageListItemBar } from '@material-ui/core';
 import LabelDialog from './LabelDialog'
+import ExportDialog from './ExportDialog'
 import AudioButton from './AudioButton'
 
 export default class DataManager extends React.Component {
@@ -163,27 +164,7 @@ export default class DataManager extends React.Component {
                         }}>
                         Split
                     </Button>
-                    <Button id="export" variant="contained" onClick={() =>
-                        {
-                            fetch(process.env.REACT_APP_API_URL + '/peoples_speech/export',
-                                {
-                                    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                      // 'Content-Type': 'application/x-www-form-urlencoded',
-                                    },
-                                    body: JSON.stringify({ view : this.state.view, images: this.state.images}) // body data type must match "Content-Type" header
-                                }
-                            )
-                            .then(res => res.json())
-                            .then((data) => {
-                                console.log("Got response: ", data);
-                            })
-                            .catch(console.log)
-                        }}>
-                        Export
-                    </Button>
+                    <ExportDialog images={this.state.images} view={this.state.view} />
                 </Grid>
                 <Grid container justifyContent = "center">
                     <FormGroup>

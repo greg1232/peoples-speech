@@ -13,7 +13,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def export(view, images):
+def export(view, images, name):
     '''Exports a view from the dataset.'''
 
     config = get_config()
@@ -37,7 +37,7 @@ def export(view, images):
 
     exported_database = Database(config["data_manager"]["export"]["table_name"], config)
 
-    exported_database.insert({"id" : hash_md5.hexdigest(), "path" : dataset_path})
+    exported_database.insert({"id" : hash_md5.hexdigest(), "path" : dataset_path, "name" : name})
 
     return dataset_path
 

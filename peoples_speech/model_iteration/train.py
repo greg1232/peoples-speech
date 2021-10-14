@@ -10,6 +10,7 @@ import json
 import yaml
 import os
 import hashlib
+import time
 
 import logging
 
@@ -22,13 +23,13 @@ def train(model_config):
 
     train_config_path, training_config = make_training_directory(config, model_config)
 
-    record_training_job(database, train_config_path)
+    job = record_training_job(database, train_config_path, model_config)
 
     trainer = TrainerFactory(config, train_config_path).create()
 
     trainer.launch()
 
-    update_training_job(database, train_config_path, training_config)
+    update_training_job(database, train_config_path, training_config, job)
 
     return train_config_path
 
@@ -48,24 +49,32 @@ def make_training_directory(config, model_config):
 
     return config_path, training_config
 
-def record_training_job(database, train_config_path):
+def record_training_job(database, train_config_path, model_config):
     job = {
+        "name" : model_config["dataset"]["name"],
         "train_config_path" : train_config_path,
         "status" : "created",
+        "start_time": int( time.time_ns() / 1000000 ),
+        "end_time" : "still running...",
         "accuracy" : "still running..."
     }
     database.insert(job)
 
-def update_training_job(database, train_config_path, training_config):
-    logger.debug("Loading results from " + training_config["model"]["results_path"])
-    with open(training_config["model"]["results_path"]) as results_file:
-        results = json.load(results_file)
+    return job
 
-    job = {
-        "train_config_path" : train_config_path,
-        "status" : "finished",
-        "accuracy" : results["accuracy"]
-    }
+def update_training_job(database, train_config_path, training_config, job):
+    logger.debug("Loading results from " + training_config["model"]["results_path"])
+    try:
+        with open(training_config["model"]["results_path"]) as results_file:
+            results = json.load(results_file)
+
+        job["accuracy"] = results["accuracy"]
+        job["status"] = "finished"
+    except:
+        job["status"] = "failed"
+
+    job["end_time"] = int( time.time_ns() / 1000000 )
+
     database.update(job, ("train_config_path", train_config_path) )
 
 def make_training_config(model_config, config, path):
@@ -74,7 +83,7 @@ def make_training_config(model_config, config, path):
     with open(base_config_path) as base_config_file:
         training_config = yaml.load(base_config_file)
 
-        training_config["dataset"]["path"] = model_config["dataset"]
+        training_config["dataset"]["path"] = model_config["dataset"]["path"]
 
         training_config["model"]["save_path"] = os.path.join(path, "best")
         training_config["model"]["results_path"] = os.path.join(path, "results.json")
