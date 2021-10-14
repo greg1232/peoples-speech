@@ -30,7 +30,7 @@ def main():
 
     try:
         with open(args["config_path"]) as config_file:
-            training_config = yaml.load(config_file)
+            training_config = yaml.safe_load(config_file)
 
     except Exception as e:
         logger.error("Failed to load config file, using defaults.")
