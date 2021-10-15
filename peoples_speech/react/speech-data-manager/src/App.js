@@ -13,7 +13,7 @@ import Deploy from './components/Deploy'
 
 class App extends React.Component {
     componentDidMount(){
-      document.title = "Peoples Speech Platform"
+      document.title = "The People's Speech Platform"
     }
 
     render() {
