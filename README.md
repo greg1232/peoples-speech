@@ -1,4 +1,4 @@
-# peoples-speech
+# The Peoples Speech
 
 The people's speech is an enterprise MLOps platform that offers end-to-end workflow to build, iterate and operationalize AI powered speech solutions. With data quality being a key to the success of production AI systems, the people's speech is equipped with a host of specially designed data preparation tools and workflows that help users achieve optimal data accuracy and consistency. 
 
