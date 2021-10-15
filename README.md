@@ -29,7 +29,7 @@ cd peoples-speech
 
 # Deployments
 
-The master branch of this repo deploys automatically to a staging service at www.peoples-speech.com:3000 using [an AWS CodePipeline](https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html)
+The main branch of this repo deploys automatically to a staging service at www.peoples-speech.com:3000 using [an AWS CodePipeline](https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html)
 
 The CodePipeline performs the following steps:
   * Checks out from the main branch of this repo
