@@ -25,7 +25,7 @@ cd peoples-speech
 
 # Preview
 
-[Contribution guidelines for this project](docs/images/preview.png)
+![Preview image of people's speech](docs/images/preview.png)
 
 # Deployments
 
