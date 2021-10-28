@@ -61,6 +61,12 @@ def get_exported_datasets():
     datasets = peoples_speech.get_exported_datasets()
     return { "datasets" : datasets }
 
+@app.route('/peoples_speech/get_error_analysis_results', methods=['GET', 'POST'])
+def get_error_analysis_results():
+    logger.debug("Getting error analysis results...")
+    results = peoples_speech.get_error_analysis_results(request.json["model_uid"])
+    return { "images" : results["images"] }
+
 if __name__ == '__main__':
     peoples_speech.create_config()
     app.run(host='0.0.0.0')

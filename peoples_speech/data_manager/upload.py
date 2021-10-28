@@ -49,6 +49,7 @@ def make_image(entry):
     entry["image_path"] = image_path
 
     if exists(image_path):
+        logger.debug("Image exists: " + image_path + " ...")
         return
 
     with open(entry["audio_path"], "rb") as audio_file:

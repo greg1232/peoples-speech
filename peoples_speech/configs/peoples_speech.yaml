@@ -23,7 +23,7 @@ model_iteration:
     job_table_name: "training_jobs"
 
     trainer:
-        type: "local"
+        type: "null"
 
 credentials:
     path: '/home/ubuntu/.aws/credentials'

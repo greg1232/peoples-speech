@@ -4,6 +4,8 @@ import React from 'react';
 import { Grid, Button, FormControl, InputLabel, Select, Box, MenuItem } from '@material-ui/core';
 import { Table, TableBody, TableHead, TableRow, TableCell, Paper, TableContainer } from '@material-ui/core';
 
+import ErrorAnalysisDialog from './ErrorAnalysisDialog.js'
+
 export default class ModelIteration extends React.Component {
     constructor(props){
         super(props)
@@ -137,6 +139,7 @@ export default class ModelIteration extends React.Component {
                                 <TableCell align="right">Start Time</TableCell>
                                 <TableCell align="right">End Time</TableCell>
                                 <TableCell align="right">Status</TableCell>
+                                <TableCell align="right">Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -152,6 +155,7 @@ export default class ModelIteration extends React.Component {
                                 <TableCell align="right">{timestampToString(row.start_time)}</TableCell>
                                 <TableCell align="right">{timestampToString(row.end_time)}</TableCell>
                                 <TableCell align="right">{row.status}</TableCell>
+                                <TableCell align="right"> <ErrorAnalysisDialog uid={row.uid} /> </TableCell>
                               </TableRow>
                             ))}
                         </TableBody>

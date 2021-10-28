@@ -3,6 +3,7 @@ from peoples_speech.util.config import create_config
 from peoples_speech.data_manager.upload import upload
 from peoples_speech.data_manager.set_labels import set_labels
 from peoples_speech.data_manager.get_view import get_view
+from peoples_speech.data_manager.get_error_analysis_results import get_error_analysis_results
 from peoples_speech.data_manager.autosplit import autosplit
 from peoples_speech.data_manager.export import export
 from peoples_speech.model_iteration.train import train

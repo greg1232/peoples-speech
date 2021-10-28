@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { TextField, Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, Box, ImageListItemBar } from '@material-ui/core';
+import UploadDialog from './UploadDialog'
 import LabelDialog from './LabelDialog'
 import ExportDialog from './ExportDialog'
 import AudioButton from './AudioButton'
@@ -31,10 +32,12 @@ export default class DataManager extends React.Component {
     }
 
     handleImageClick(item) {
-        if (item.selected === 1)
+        if (item.selected === 1) {
             item.selected = 0;
-        else
+        }
+        else {
             item.selected = 1;
+        }
         this.setState({images: this.state.images});
     }
 
@@ -142,6 +145,8 @@ export default class DataManager extends React.Component {
                             }}>
                             Upload
                         </Button>
+
+                        <UploadDialog getView={this.getView} />
                     </Box>
                 </Grid>
                 <Grid container justifyContent = "center">

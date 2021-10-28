@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.6.0-gpu
+FROM tensorflow/tensorflow:2.6.0
 
 WORKDIR /app
 COPY ./requirements.txt /app/requirements.txt
@@ -8,3 +8,4 @@ COPY . /app
 
 RUN chmod a+x /app/scripts/run.sh
 ENTRYPOINT ["/app/scripts/run.sh"]
+
