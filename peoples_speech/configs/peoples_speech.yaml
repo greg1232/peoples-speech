@@ -23,10 +23,12 @@ model_iteration:
     job_table_name: "training_jobs"
 
     trainer:
-        type: "null"
+        type: "local"
 
 credentials:
-    path: '/home/ubuntu/.aws/credentials'
+    path: "/home/ubuntu/.aws/credentials"
+
+target: "x86"
 
 verbose: True
 verbose_info: True

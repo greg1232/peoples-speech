@@ -21,6 +21,15 @@ def get_dataset(config, key):
 
     return spectrogram_ds
 
+def get_dataset_metadata(config, key):
+    with open(config["dataset"]["path"]) as dataset_file:
+        with jsonlines.Reader(dataset_file) as dataset_reader:
+            for line in dataset_reader:
+                if not line[key]:
+                    continue
+
+                yield line
+
 def load_dataset_file(config, key):
     tf_generator = lambda: (row for row in dataset_file_generator(config, key))
     return tf.data.Dataset.from_generator(tf_generator,
@@ -29,15 +38,10 @@ def load_dataset_file(config, key):
             tf.TensorSpec(shape=(), dtype=tf.int32)))
 
 def dataset_file_generator(config, key):
-    with open(config["dataset"]["path"]) as dataset_file:
-        with jsonlines.Reader(dataset_file) as dataset_reader:
-            for line in dataset_reader:
-                if not line[key]:
-                    continue
-
-                with open(line["label_path"]) as label_file:
-                    label = json.load(label_file)["label"]
-                yield line["audio_path"], get_label(config, label)
+    for line in get_dataset_metadata(config, key):
+        with open(line["label_path"]) as label_file:
+            label = json.load(label_file)["label"]
+        yield line["audio_path"], get_label(config, label)
 
 def get_label(config, label_string):
     if label_string.find(config["model"]["label"]) != -1:

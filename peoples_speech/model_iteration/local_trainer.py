@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import docker
 import os
+import json
 
 import logging
 
@@ -24,26 +25,25 @@ class TaskRunner:
         self.train_config_path = train_config_path
 
         self.docker_client = docker.from_env()
+        self.low_level_docker_client = docker.APIClient(base_url='unix://var/run/docker.sock')
 
     def __call__(self):
-        image = self.build()
-        self.run(image)
+        self.build()
+        self.run()
 
     def build(self):
-        task_container_path = os.path.join(os.path.dirname(__file__), "task_container")
-        logger.debug("Building container at: " + task_container_path)
-        image, logs = self.docker_client.images.build(path=task_container_path)
+        task_container_path = os.path.join(os.path.dirname(__file__), "trainer_container")
+        logger.debug("Building container at: " + task_container_path + " for target: " + self.config["target"])
+        logs = self.low_level_docker_client.build(path=task_container_path, target=self.config["target"], tag="peoples-speech-task:latest", decode=True)
 
         for chunk in logs:
             if 'stream' in chunk:
                 for line in chunk['stream'].splitlines():
                     logger.debug(line)
 
-        return image
-
-    def run(self, image):
+    def run(self):
         logger.debug("Running container...")
-        container = self.docker_client.containers.run(image, command=self.train_config_path, detach=True, volumes=
+        container = self.docker_client.containers.run("peoples-speech-task:latest", command=self.train_config_path, detach=True, volumes=
             {self.config["credentials"]["path"]: {'bind': '/root/.aws/credentials', 'mode': 'ro'},
              '/var/run/docker.sock': {'bind': '/var/run/docker.sock', 'mode': 'rw'}})
 

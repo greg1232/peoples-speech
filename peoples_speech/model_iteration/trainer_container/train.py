@@ -2,6 +2,7 @@
 from peoples_speech_tasks import get_dataset
 from peoples_speech_tasks import get_model
 from peoples_speech_tasks import get_config
+from peoples_speech_tasks import get_error_analysis
 
 import tensorflow as tf
 
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 def main():
     parser = argparse.ArgumentParser(description=
         "Train a deep net on a dataset, producing a saved model.")
-    parser.add_argument("config_path", default="",
+    parser.add_argument("config_path", default="", nargs='?',
                         help="The training config file to read from")
 
     args = vars(parser.parse_args())
@@ -59,7 +60,7 @@ def main():
         validation_data=test_dataset,
         verbose=2,
         epochs=config["model"]["epochs"],
-        callbacks=tf.keras.callbacks.EarlyStopping(verbose=1, patience=2))
+        callbacks=tf.keras.callbacks.EarlyStopping(verbose=1, patience=config["model"]["patience"]))
 
     logger.debug("Saving model...")
     model.save(config["model"]["save_path"])
@@ -67,7 +68,8 @@ def main():
     logger.debug("Saving results to: " + config["model"]["results_path"])
 
     with open(config["model"]["results_path"], "w") as results_file:
-        json.dump({"accuracy" : history.history['val_accuracy'][-1]}, results_file)
+        json.dump({"accuracy" : history.history['val_accuracy'][-1],
+            "error_analysis" : get_error_analysis(model, config)}, results_file)
 
 if __name__ == "__main__":
     main()

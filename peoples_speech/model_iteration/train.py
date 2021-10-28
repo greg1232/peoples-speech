@@ -78,7 +78,7 @@ def update_training_job(database, train_config_path, training_config, job):
     database.update(job, ("train_config_path", train_config_path) )
 
 def make_training_config(model_config, config, path):
-    base_config_path = os.path.join(os.path.dirname(__file__), "task_container",
+    base_config_path = os.path.join(os.path.dirname(__file__), "trainer_container",
         "peoples_speech_tasks", "configs", "peoples_speech_tasks_config.yaml")
 
     with open(base_config_path) as base_config_file:
