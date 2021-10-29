@@ -18,6 +18,9 @@ data_manager:
         table_name: "exported"
         path: "s3://peoples-speech/datasets/prestamo"
 
+    upload:
+        path: "s3://peoples-speech/datasets/prestamo/uploads"
+
 model_iteration:
     training_path: "s3://peoples-speech/models/prestamo"
     job_table_name: "training_jobs"

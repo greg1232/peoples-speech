@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { TextField, Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, Box, ImageListItemBar } from '@material-ui/core';
+import { Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, Box, ImageListItemBar } from '@material-ui/core';
 import UploadDialog from './UploadDialog'
 import LabelDialog from './LabelDialog'
 import ExportDialog from './ExportDialog'
@@ -10,7 +10,6 @@ export default class DataManager extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            jsonlines_path : "s3://peoples-speech/examples/prestamo/prestamo.jsonlines",
             images: [ ],
             view: {
                 split: {
@@ -22,7 +21,6 @@ export default class DataManager extends React.Component {
                 }
             }
         }
-        this.handlePathUpdate = this.handlePathUpdate.bind(this);
         this.handleImagesUpdate = this.handleImagesUpdate.bind(this);
         this.handleTrainUpdate = this.handleTrainUpdate.bind(this);
         this.handleTestUpdate = this.handleTestUpdate.bind(this);
@@ -41,11 +39,6 @@ export default class DataManager extends React.Component {
         this.setState({images: this.state.images});
     }
 
-    handlePathUpdate(path) {
-        console.log("updated path: " + path.target.value);
-        this.setState({jsonlines_path: path.target.value});
-    }
-
     handleImagesUpdate(data) {
         let new_images = data["images"].map((image) => ({
             label: image["label"],
@@ -62,7 +55,7 @@ export default class DataManager extends React.Component {
         var view = {...this.state.view};
         view.split.train = !view.split.train;
         this.setState({view});
-        this.getView(view);
+        this.getView();
     }
 
     handleTestUpdate() {
@@ -70,7 +63,7 @@ export default class DataManager extends React.Component {
         var view = {...this.state.view};
         view.split.test = !view.split.test;
         this.setState({view});
-        this.getView(view);
+        this.getView();
     }
 
     handleLabeledUpdate() {
@@ -78,34 +71,15 @@ export default class DataManager extends React.Component {
         var view = {...this.state.view};
         view.labels.labeled = !view.labels.labeled;
         this.setState({view});
-        this.getView(view);
+        this.getView();
     }
 
-    upload() {
-        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/upload',
-            {
-                method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                headers: {
-                  'Content-Type': 'application/json'
-                  // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: JSON.stringify({ dataset_path : this.state.jsonlines_path}) // body data type must match "Content-Type" header
-            }
-        )
-        .then(res => res.json())
-        .then((data) => {
-            console.log("Got response: ", data);
-        }).then(() => this.getView(this.state.view))
-        .catch(console.log)
-    }
-
-    getView(view) {
-        if(!view.split.train) {
-            delete view.split.train;
+    getView() {
+        if(!this.state.view.split.train) {
+            delete this.state.view.split.train;
         }
-        if(!view.split.test) {
-            delete view.split.test;
+        if(!this.state.view.split.test) {
+            delete this.state.view.split.test;
         }
 
         fetch(process.env.REACT_APP_API_URL + '/peoples_speech/get_view',
@@ -116,7 +90,7 @@ export default class DataManager extends React.Component {
                   'Content-Type': 'application/json'
                   // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify({ view : view }) // body data type must match "Content-Type" header
+                body: JSON.stringify({ view : this.state.view }) // body data type must match "Content-Type" header
             }
         )
         .then(res => res.json())
@@ -128,26 +102,13 @@ export default class DataManager extends React.Component {
     }
 
     componentDidMount() {
-        this.getView(this.state.view);
+        this.getView();
     }
 
     render() {
         return <div>
                 <Grid container justifyContent = "center">
-                    <TextField id="jsonlines-path" label="Dataset jsonlines path"
-                        variant="outlined" value={this.state.jsonlines_path}
-                        onChange={this.handlePathUpdate}
-                        style = {{width: 500}} />
-                    <Box m={1}>
-                        <Button id="upload" variant="contained" onClick={ () =>
-                            {
-                                this.upload();
-                            }}>
-                            Upload
-                        </Button>
-
-                        <UploadDialog getView={this.getView} />
-                    </Box>
+                    <UploadDialog getView={this.getView} />
                 </Grid>
                 <Grid container justifyContent = "center">
                     <Box m={1}>

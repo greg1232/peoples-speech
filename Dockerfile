@@ -1,6 +1,8 @@
 FROM python:3.9 as base
 
-RUN apt-get -yq update && apt-get install -yqq npm
+RUN apt-get -yq update && \
+    apt-get install -yqq npm && \
+    apt-get install -yqq libsndfile1
 
 WORKDIR /app/peoples_speech/react/speech-data-manager
 COPY ./peoples_speech/react/speech-data-manager/package.json /app/peoples_speech/react/speech-data-manager/package.json
@@ -15,11 +17,7 @@ RUN npm install @material-ui/core@next && \
 
 RUN npm install @material-ui/icons@next
 RUN npm install @material-ui/styles@next
-
-# Install peakjs
-#RUN npm install peaks.js && \
-#    npm install konva && \
-#    npm install waveform-data
+RUN npm install @material-ui/lab@next
 
 # Install react router
 RUN npm install react-router-dom
@@ -27,11 +25,19 @@ RUN npm install react-router-dom
 # Install environment
 RUN npm install env-cmd
 
-RUN apt-get install -yqq libsndfile1
+# Install dropzone
+RUN npm install react-dropzone
+
+# Install peakjs
+#RUN npm install peaks.js && \
+#    npm install konva && \
+#    npm install waveform-data
 
 WORKDIR /app
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
+
+RUN apt-get install -yqq ffmpeg
 
 COPY . /app
 WORKDIR /app

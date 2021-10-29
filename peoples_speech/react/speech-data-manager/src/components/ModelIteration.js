@@ -169,7 +169,7 @@ function accuracyToFixed(accuracy) {
     if (isNaN(accuracy)) {
         return accuracy;
     }
-    return accuracy.toFixed(2)
+    return accuracy.toFixed(2);
 }
 
 function timestampToString(timestamp) {

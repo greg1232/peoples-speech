@@ -43,6 +43,18 @@ def get_view():
     view = peoples_speech.get_view(request.json["view"])
     return { "images" : view["images"]}
 
+@app.route('/peoples_speech/get_upload_url_for_file', methods=['GET', 'POST'])
+def get_upload_url_for_file():
+    logger.debug("Getting upload url of file: " + str(request.json))
+    url, path = peoples_speech.get_upload_url_for_file(request.json["file"])
+    return { "url" : url, "path" : path }
+
+@app.route('/peoples_speech/register_uploaded_audio', methods=['GET', 'POST'])
+def register_uploaded_audio():
+    logger.debug("Getting upload url of file: " + str(request.json))
+    entry = peoples_speech.register_uploaded_audio(request.json["path"])
+    return entry
+
 @app.route('/peoples_speech/train', methods=['GET', 'POST'])
 def train():
     logger.debug("Training new model: " + str(request.json))
