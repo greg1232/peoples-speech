@@ -1,0 +1,17 @@
+
+model_iteration:
+    training_path: "s3://peoples-speech/models/prestamo"
+    job_table_name: "training_jobs"
+
+    trainer:
+        endpoint: "remote_trainer/train" #TODO: base url?
+        type: "remote"
+        port: 5555
+
+credentials:
+    path: "/home/ubuntu/.aws/credentials"
+
+target: "x86"
+
+verbose: True
+verbose_info: True

@@ -1,1 +1,1 @@
-docker build --target development -t peoples-speech:latest .
+docker-compose -f ./scripts/docker-compose.yml build

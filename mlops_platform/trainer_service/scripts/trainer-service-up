@@ -27,13 +27,7 @@ function parse_yaml {
    }'
 }
 
-eval $(parse_yaml $LOCAL_DIRECTORY/../peoples_speech/configs/peoples_speech.yaml "")
+eval $(parse_yaml $LOCAL_DIRECTORY/trainer/configs/peoples_speech.yaml "")
 
-#PASS=$(aws ecr get-login-password --region ${AWS_REGION})
+docker run --rm -it -p 5555:5555 -v $HOME/.aws/credentials:/root/.aws/credentials:ro -v /var/run/docker.sock:/var/run/docker.sock -e PEOPLES_SPEECH_CREDENTIALS_PATH="$HOME/.aws/credentials" -e PEOPLES_SPEECH_TARGET="$(uname -m)" trainer-service:latest
 
-#echo $PASS | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_URL}
-
-#docker pull ${AWS_ECR_REGISTRY_URL}/peoples-speech:latest
-
-#docker run --rm -it -p 3000:3000 -p 5000:5000 -v $HOME/.aws/credentials:/root/.aws/credentials:ro -v /var/run/docker.sock:/var/run/docker.sock -e PEOPLES_SPEECH_CREDENTIALS_PATH="$HOME/.aws/credentials" -e PEOPLES_SPEECH_TARGET="$(uname -m)" peoples-speech:latest
-docker-compose -f ./scripts/docker-compose.yml up -e PEOPLES_SPEECH_TARGET="$(uname -m)" 

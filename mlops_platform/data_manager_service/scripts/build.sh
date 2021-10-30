@@ -1,0 +1,1 @@
+docker build --target development -t data-manager-service:latest .
