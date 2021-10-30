@@ -65,9 +65,16 @@ def get_spectrogram_and_label_id(audio, label_id):
     return spectrogram, label_id
 
 def get_spectrogram(waveform):
+    maximum_size = 100000
+
+    # truncate to max length
+    new_size = tf.minimum(maximum_size, tf.shape(waveform)[-1])
+
+    waveform = waveform[:new_size]
+
     #tf.print("Waveform shape ", tf.shape(waveform))
-    # Padding for files with less than 16000 samples
-    zero_padding = tf.zeros([100000] - tf.shape(waveform), dtype=tf.float32)
+    # Padding for files with less than maximum_size samples
+    zero_padding = tf.zeros([maximum_size] - tf.shape(waveform), dtype=tf.float32)
 
     # Concatenate audio with padding so that all audio clips will be of the
     # same length
