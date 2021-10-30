@@ -17,7 +17,7 @@ RUN apt install -yqq libmp3lame-dev
 
 WORKDIR /app
 COPY ./requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip --no-cache-dir install -r requirements.txt
 
 COPY . /app
 
