@@ -1,24 +1,24 @@
 FROM python:3.9 as base
 
-WORKDIR /app/trainer
-COPY ./requirements.txt /app/trainer/requirements.txt
+WORKDIR /app/trainer_service
+COPY ./requirements.txt /app/trainer_service/requirements.txt
 RUN pip install -r requirements.txt
 
-COPY . /app/trainer
-WORKDIR /app/trainer
+COPY . /app/trainer_service
+WORKDIR /app/trainer_service
 
 # Developement target
 FROM base as development
 
-RUN chmod a+x /app/trainer/scripts/start-dev.sh
+RUN chmod a+x /app/trainer_service/scripts/start-dev.sh
 
-ENTRYPOINT ["/app/trainer/scripts/start-dev.sh"]
+ENTRYPOINT ["/app/trainer_service/scripts/start-dev.sh"]
 
 # Staging target
 FROM base as staging
 
-RUN chmod a+x /app/trainer/scripts/start-staging.sh
+RUN chmod a+x /app/trainer_service/scripts/start-staging.sh
 
-ENTRYPOINT ["/app/trainer/scripts/start-staging.sh"]
+ENTRYPOINT ["/app/trainer_service/scripts/start-staging.sh"]
 
 

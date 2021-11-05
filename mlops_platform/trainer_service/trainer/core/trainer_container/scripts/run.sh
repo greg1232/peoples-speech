@@ -27,7 +27,7 @@ function parse_yaml {
    }'
 }
 
-eval $(parse_yaml $LOCAL_DIRECTORY/../peoples_speech_tasks/configs/peoples_speech_tasks_config.yaml "")
+eval $(parse_yaml $LOCAL_DIRECTORY/../peoples_speech_tasks/configs/peoples_speech.yaml "")
 export AWS_REGION
 
 # Start the dev environment

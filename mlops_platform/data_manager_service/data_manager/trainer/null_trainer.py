@@ -21,11 +21,11 @@ class NullTrainer:
 
         logger.debug("Loaded config: " + str(training_config))
 
-        logger.debug("Saving results to: " + training_config["model"]["results_path"])
+        logger.debug("Saving results to: " + training_config["model_iteration"]["trainer"]["model"]["results_path"])
 
         error_analysis = get_error_analysis(training_config)
 
-        with open(training_config["model"]["results_path"], "w") as results_file:
+        with open(training_config["model_iteration"]["trainer"]["model"]["results_path"], "w") as results_file:
             json.dump({"accuracy" : 0.0, "error_analysis" : error_analysis}, results_file)
 
 
@@ -34,12 +34,14 @@ def get_error_analysis(training_config):
 
     for line in load_test_set(training_config):
         line["prediction"] = "null"
+        line["score"] = "0"
+        line["target_concept"] = training_config["model_iteration"]["trainer"]["model"]["label"]
         error_analysis.append(line)
 
     return error_analysis
 
 def load_test_set(training_config):
-    with open(training_config["dataset"]["path"]) as dataset_file:
+    with open(training_config["model_iteration"]["trainer"]["dataset"]["path"]) as dataset_file:
         with jsonlines.Reader(dataset_file) as dataset_reader:
             for line in dataset_reader:
                 if not line["test"]:

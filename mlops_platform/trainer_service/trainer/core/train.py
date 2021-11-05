@@ -30,9 +30,14 @@ class TaskRunner:
         self.run()
 
     def build(self):
-        task_container_path = os.path.join(os.path.dirname(__file__), "trainer-container")
+        task_container_path = os.path.join(os.path.dirname(__file__), "trainer_container")
         logger.debug("Building container at: " + task_container_path + " for target: " + self.config["target"])
-        logs = self.low_level_docker_client.build(path=task_container_path, target=self.config["target"], tag="trainer-container:latest", decode=True)
+        dockerfile_path = "Dockerfile"
+        if self.config["target"].find("arm") == 0:
+            dockerfile_path += ".arm"
+        logs = self.low_level_docker_client.build(path=task_container_path,
+            dockerfile=dockerfile_path, target=self.config["target"],
+            tag="trainer-container:latest", decode=True)
 
         for chunk in logs:
             if 'stream' in chunk:
@@ -40,7 +45,7 @@ class TaskRunner:
                     logger.debug(line)
 
     def run(self):
-        logger.debug("Running container...")
+        logger.debug("Running container on config path: " + self.train_config_path)
         container = self.docker_client.containers.run("trainer-container:latest", command=self.train_config_path, detach=True, volumes=
             {self.config["credentials"]["path"]: {'bind': '/root/.aws/credentials', 'mode': 'ro'},
              '/var/run/docker.sock': {'bind': '/var/run/docker.sock', 'mode': 'rw'}})

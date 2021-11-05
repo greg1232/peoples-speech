@@ -10,4 +10,6 @@ set -Eeuoxa pipefail
 # Get the directory of this script
 LOCAL_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-docker-compose -f ./scripts/docker-compose.yml up -e PEOPLES_SPEECH_TARGET="$(uname -m)"
+$LOCAL_DIRECTORY/sync-configs.sh
+
+PEOPLES_SPEECH_TARGET="$(uname -m)" docker-compose -f ./scripts/docker-compose.yml up --build

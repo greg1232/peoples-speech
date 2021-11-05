@@ -1,1 +1,4 @@
-docker build --target arm64 -t peoples-speech-task:latest .
+
+cp -R ../../configs/* ./trainer/configs/
+
+docker build --target arm64 -t trainer-container:latest -f Dockerfile.arm .

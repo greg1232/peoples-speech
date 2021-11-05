@@ -49,7 +49,7 @@ export default class UploadDialog extends React.Component {
                     <UploadTabs getView={this.props.getView} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleClose}>Cancel</Button>
+                    <Button onClick={this.handleClose}>Close</Button>
                 </DialogActions>
             </Dialog>
         </div>

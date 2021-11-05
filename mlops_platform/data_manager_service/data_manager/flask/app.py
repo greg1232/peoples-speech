@@ -34,13 +34,13 @@ def export():
 @app.route('/peoples_speech/autosplit', methods=['GET', 'POST'])
 def autosplit():
     logger.debug("Splitting data with view: " + str(request.json))
-    peoples_speech.autosplit(request.json["view"], request.json["images"])
+    data_manager.autosplit(request.json["view"], request.json["images"])
     return { "status" : "ok"}
 
 @app.route('/peoples_speech/setsplit', methods=['GET', 'POST'])
 def setsplit():
     logger.debug("Splitting data with view: " + str(request.json))
-    peoples_speech.setsplit(request.json["view"], request.json["images"], request.json["type"])
+    data_manager.setsplit(request.json["view"], request.json["images"], request.json["type"])
 
 @app.route('/peoples_speech/get_view', methods=['GET', 'POST'])
 def get_view():

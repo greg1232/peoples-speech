@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 @app.route('/remote_trainer/train', methods=['GET', 'POST'])
 def train():
     logger.debug("Training new model remotely: " + str(request.json))
-    model = trainer.train(request.json)
+    model = trainer.train(request.json["path"])
     return { "model" : model}
 
 if __name__ == '__main__':

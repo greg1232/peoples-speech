@@ -1,21 +1,34 @@
 version: "3.9"
 services:
   react-webserver:
-    build: 
+    build:
       context: ../mlops_platform/react_webserver/
       target: development
     ports:
       - "3000:3000"
 
   data-manager-service:
-    build: 
+    build:
       context: ../mlops_platform/data_manager_service/
       target: development
     ports:
       - "5001:5001"
-    environment:
-      - PEOPLES_SPEECH_CREDENTIALS_PATH="${HOME}/.aws/credentials"
 
+    volumes:
+      - type: bind
+        source: ${HOME}/.aws/credentials
+        target: /root/.aws/credentials
+        read_only: true
+    networks:
+      - my-bridge
+
+  trainer-service:
+    build:
+      context: ../mlops_platform/trainer_service/
+      target: development
+    environment:
+      - PEOPLES_SPEECH_TARGET=${PEOPLES_SPEECH_TARGET}
+      - PEOPLES_SPEECH_CREDENTIALS_PATH=${HOME}/.aws/credentials
     volumes:
       - type: bind
         source: ${HOME}/.aws/credentials
@@ -23,10 +36,14 @@ services:
         read_only: true
       - type: bind
         source: /var/run/docker.sock
-        target: /var/run/docker.sock  
-  trainer-service:
-    build: 
-      context: ../mlops_platform/trainer_service/
-      target: development
+        target: /var/run/docker.sock
     ports:
       - "5555:5555"
+    networks:
+      my-bridge:
+        aliases:
+          - trainer
+
+networks:
+  my-bridge:
+    name: custom_network

@@ -1,12 +1,49 @@
 
+support:
+    database:
+        type: "tinydb"
+        path: "/tmp/data_manager_db.json"
+
+    get_url:
+        expiration: 3600
+
+data_manager:
+    table_name: "data"
+
+    autosplit:
+        seed: 42
+        train_percent: 50.0
+
+    export:
+        table_name: "exported"
+        path: "s3://peoples-speech/datasets/prestamo"
+
+    upload:
+        path: "s3://peoples-speech/datasets/prestamo/uploads"
+
 model_iteration:
     training_path: "s3://peoples-speech/models/prestamo"
     job_table_name: "training_jobs"
 
     trainer:
-        endpoint: "remote_trainer/train" #TODO: base url?
         type: "remote"
-        port: 5555
+        endpoint: "http://trainer:5555/remote_trainer/train"
+        model:
+            type: "keyword"
+            label: "prestamo"
+            repeat: 4
+            batch_size: 2
+            epochs: 10
+            patience: 3
+            shuffle_buffer_size: 16
+
+            save_path: "s3://peoples-speech/models/prestamo/efc19a0d2ebba02e26281a8235ece1c6"
+            local_save_path: "/app/models"
+            results_path: "s3://peoples-speech/models/prestamo/efc19a0d2ebba02e26281a8235ece1c6/results.json"
+
+        dataset:
+            path: "s3://peoples-speech/datasets/prestamo/955c16269fbd3fe2553e203e56a0b8c6.jsonlines"
+
 
 credentials:
     path: "/home/ubuntu/.aws/credentials"
@@ -15,3 +52,5 @@ target: "x86"
 
 verbose: True
 verbose_info: True
+aws_region: us-east-2
+

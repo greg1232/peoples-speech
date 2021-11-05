@@ -1,0 +1,20 @@
+FROM arm64v8/ubuntu:20.04 as arm64
+
+ENV PIP_EXTRA_INDEX_URL=https://snapshots.linaro.org/ldcg/python-cache/
+RUN apt update -yqq && apt install -yqq python3 python3-pip wget
+RUN apt install -yqq libmp3lame-dev
+
+WORKDIR /app
+RUN python3 -m pip install --upgrade pip
+RUN wget https://snapshots.linaro.org/ldcg/python-cache/grpcio/grpcio-1.41.1-cp38-cp38-manylinux_2_17_aarch64.whl
+RUN mv grpcio-1.41.1-cp38-cp38-manylinux_2_17_aarch64.whl grpcio-1.41.1-cp38-none-any.whl
+RUN pip install grpcio-1.41.1-cp38-none-any.whl
+
+COPY ./requirements.txt /app/requirements.txt
+RUN pip --no-cache-dir install -r requirements.txt
+
+COPY . /app
+
+RUN chmod a+x /app/scripts/run.sh
+ENTRYPOINT ["/app/scripts/run.sh"]
+

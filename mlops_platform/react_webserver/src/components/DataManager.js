@@ -134,6 +134,7 @@ export default class DataManager extends React.Component {
                                 .then(res => res.json())
                                 .then((data) => {
                                     console.log("Got response: ", data);
+                                    this.getView();
                                 })
                                 .catch(console.log)
                             }}>
@@ -158,6 +159,7 @@ export default class DataManager extends React.Component {
                                 .then(res => res.json())
                                 .then((data) => {
                                     console.log("Got response: ", data);
+                                    this.getView();
                                 })
                                 .catch(console.log)
                             }}>
@@ -181,6 +183,7 @@ export default class DataManager extends React.Component {
                                 .then(res => res.json())
                                 .then((data) => {
                                     console.log("Got response: ", data);
+                                    this.getView();
                                 })
                                 .catch(console.log)
                             }}>
@@ -250,7 +253,7 @@ function getTrainTestString(item) {
     }
     return "unsplit";
 }
-+
+
 
 
 
