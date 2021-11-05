@@ -31,12 +31,19 @@ class TaskRunner:
 
     def build(self):
         task_container_path = os.path.join(os.path.dirname(__file__), "trainer_container")
-        logger.debug("Building container at: " + task_container_path + " for target: " + self.config["target"])
+
+        target = self.config["target"]
+        logger.debug("Building container at: " + task_container_path + " for target: " + target)
+
+        if self.config["target"].find("x86") == 0:
+            target = "x86"
+
         dockerfile_path = "Dockerfile"
-        if self.config["target"].find("arm") == 0:
+        if target.find("arm") == 0:
             dockerfile_path += ".arm"
+
         logs = self.low_level_docker_client.build(path=task_container_path,
-            dockerfile=dockerfile_path, target=self.config["target"],
+            dockerfile=dockerfile_path, target=target,
             tag="trainer-container:latest", decode=True)
 
         for chunk in logs:
