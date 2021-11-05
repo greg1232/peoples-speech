@@ -34,8 +34,13 @@ def export():
 @app.route('/peoples_speech/autosplit', methods=['GET', 'POST'])
 def autosplit():
     logger.debug("Splitting data with view: " + str(request.json))
-    data_manager.autosplit(request.json["view"])
+    peoples_speech.autosplit(request.json["view"], request.json["images"])
     return { "status" : "ok"}
+
+@app.route('/peoples_speech/setsplit', methods=['GET', 'POST'])
+def setsplit():
+    logger.debug("Splitting data with view: " + str(request.json))
+    peoples_speech.setsplit(request.json["view"], request.json["images"], request.json["type"])
 
 @app.route('/peoples_speech/get_view', methods=['GET', 'POST'])
 def get_view():
@@ -77,7 +82,7 @@ def get_training_jobs():
 def get_error_analysis_results():
     logger.debug("Getting error analysis results...")
     results = data_manager.get_error_analysis_results(request.json["model_uid"])
-    return { "images" : results["images"] }
+    return { "audios" : results["audios"] }
 
 if __name__ == '__main__':
     data_manager.create_config()

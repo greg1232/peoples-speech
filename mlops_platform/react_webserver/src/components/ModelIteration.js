@@ -5,6 +5,7 @@ import { Grid, Button, FormControl, InputLabel, Select, Box, MenuItem } from '@m
 import { Table, TableBody, TableHead, TableRow, TableCell, Paper, TableContainer } from '@material-ui/core';
 
 import ErrorAnalysisDialog from './ErrorAnalysisDialog.js'
+import MetricsDialog from './MetricsDialog.js'
 
 export default class ModelIteration extends React.Component {
     constructor(props){
@@ -89,7 +90,7 @@ export default class ModelIteration extends React.Component {
                                   onChange={this.handleDatasetUpdate}
                                 >
                                     {this.state.datasets.map((dataset) => (
-                                      <MenuItem id={dataset.id} value={dataset}>{dataset.name}</MenuItem>
+                                      <MenuItem key={dataset.id} id={dataset.id} value={dataset}>{dataset.name}</MenuItem>
                                     ))}
 
                                 </Select>
@@ -139,6 +140,7 @@ export default class ModelIteration extends React.Component {
                                 <TableCell align="right">Start Time</TableCell>
                                 <TableCell align="right">End Time</TableCell>
                                 <TableCell align="right">Status</TableCell>
+                                <TableCell align="right">Metrics</TableCell>
                                 <TableCell align="right">Action</TableCell>
                             </TableRow>
                         </TableHead>
@@ -155,6 +157,7 @@ export default class ModelIteration extends React.Component {
                                 <TableCell align="right">{timestampToString(row.start_time)}</TableCell>
                                 <TableCell align="right">{timestampToString(row.end_time)}</TableCell>
                                 <TableCell align="right">{row.status}</TableCell>
+                                <TableCell align="right"> <MetricsDialog uid={row.uid} /> </TableCell>
                                 <TableCell align="right"> <ErrorAnalysisDialog uid={row.uid} /> </TableCell>
                               </TableRow>
                             ))}

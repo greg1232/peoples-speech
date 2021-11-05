@@ -25,7 +25,7 @@ export default class ErrorAnalysisDialog extends React.Component {
     }
 
     handleImagesUpdate(data) {
-        let new_images = data["images"].map((image) => ({
+        let new_images = data["audios"].map((image) => ({
             img: image["url"],
             audio_url: image["audio_url"],
             label: image["label"],

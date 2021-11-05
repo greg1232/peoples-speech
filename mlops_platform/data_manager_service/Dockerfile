@@ -2,7 +2,8 @@ FROM python:3.9 as base
 
 RUN apt-get -yq update && \
     apt-get install -yqq npm && \
-    apt-get install -yqq libsndfile1
+    apt-get install -yqq libsndfile1 && \
+    apt-get install -yqq ffmpeg
 
 WORKDIR /app/data_manager
 COPY ./requirements.txt /app/data_manager/requirements.txt

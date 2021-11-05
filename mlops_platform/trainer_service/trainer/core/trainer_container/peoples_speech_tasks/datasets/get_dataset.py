@@ -17,6 +17,7 @@ def get_dataset(config, key):
 
     spectrogram_ds = spectrogram_ds.cache()
     spectrogram_ds = spectrogram_ds.repeat(config["model"]["repeat"])
+    spectrogram_ds = spectrogram_ds.shuffle(config["model"]["shuffle_buffer_size"], seed=42)
     spectrogram_ds = spectrogram_ds.batch(config["model"]["batch_size"])
 
     return spectrogram_ds

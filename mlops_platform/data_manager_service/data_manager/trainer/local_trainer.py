@@ -34,7 +34,7 @@ class TaskRunner:
     def build(self):
         task_container_path = os.path.join(os.path.dirname(__file__), "trainer_container")
         logger.debug("Building container at: " + task_container_path + " for target: " + self.config["target"])
-        logs = self.low_level_docker_client.build(path=task_container_path, target=self.config["target"], tag="peoples-speech-task:latest", decode=True)
+        logs = self.low_level_docker_client.build(path=task_container_path, target=self.config["target"], remove=True, tag="peoples-speech-task:latest", decode=True)
 
         for chunk in logs:
             if 'stream' in chunk:

@@ -29,6 +29,9 @@ RUN npm install env-cmd
 # Install dropzone
 RUN npm install react-dropzone
 
+# Install devexpress
+RUN npm install recharts
+
 COPY . /app/react_webserver
 
 # Developement target

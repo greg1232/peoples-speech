@@ -24,6 +24,8 @@ def get_view(view):
         "url" : get_url(result["image_path"], config["support"]["get_url"]["expiration"]),
         "audio_url" : get_url(result["audio_path"], config["support"]["get_url"]["expiration"]),
         "uid" : result["uid"],
+        "train" : result["train"],
+        "test" : result["test"],
         "label" : result["label"] }
         for result in results ]
 

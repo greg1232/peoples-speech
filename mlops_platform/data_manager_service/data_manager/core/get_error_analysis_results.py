@@ -22,7 +22,7 @@ def get_error_analysis_results(model):
     model_job_infos = database.search({"model" : { "uid" : model }})
 
     if len(model_job_infos) <= 0:
-        return { "images" : [] }
+        return { "audios" : [] }
 
     model_job_info = model_job_infos[0]
 
@@ -30,15 +30,17 @@ def get_error_analysis_results(model):
 
     results = load_model_results(model_job_info)
 
-    images = [ {
+    audios = [ {
         "url" : get_url(result["image_path"], config["support"]["get_url"]["expiration"]),
         "audio_url" : get_url(result["audio_path"], config["support"]["get_url"]["expiration"]),
         "uid" : result["uid"],
         "label" : result["label"],
+        "score" : result["score"],
+        "target_concept" : result["target_concept"],
         "prediction" : result["prediction"] }
         for result in results["error_analysis"] ]
 
-    return { "images" : images }
+    return { "audios" : audios }
 
 def load_model_results(model_job_info):
     with open(model_job_info["results_path"]) as results_file:

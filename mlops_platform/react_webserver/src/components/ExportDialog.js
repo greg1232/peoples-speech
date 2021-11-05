@@ -55,7 +55,7 @@ export default class ExportDialog extends React.Component {
         return (
         <div>
             <Button variant="contained" onClick={this.handleClickOpen}>
-                Export Selected
+                Export
             </Button>
             <Dialog open={this.state.open} onClose={this.props.handleClose}>
                 <DialogTitle>Export</DialogTitle>

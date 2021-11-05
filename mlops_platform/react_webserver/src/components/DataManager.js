@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, Box, ImageListItemBar } from '@material-ui/core';
+import { Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, Box, ImageListItemBar, IconButton } from '@material-ui/core';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 import UploadDialog from './UploadDialog'
 import LabelDialog from './LabelDialog'
 import ExportDialog from './ExportDialog'
@@ -43,6 +44,8 @@ export default class DataManager extends React.Component {
         let new_images = data["images"].map((image) => ({
             label: image["label"],
             img: image["url"],
+            train: image["train"],
+            test: image["test"],
             audio : image["audio_url"],
             uid: image["uid"],
             title: "uploaded",
@@ -125,7 +128,7 @@ export default class DataManager extends React.Component {
                                           'Content-Type': 'application/json'
                                           // 'Content-Type': 'application/x-www-form-urlencoded',
                                         },
-                                        body: JSON.stringify({ view : this.state.view}) // body data type must match "Content-Type" header
+                                        body: JSON.stringify({ view : this.state.view, images : this.state.images}) // body data type must match "Content-Type" header
                                     }
                                 )
                                 .then(res => res.json())
@@ -134,7 +137,55 @@ export default class DataManager extends React.Component {
                                 })
                                 .catch(console.log)
                             }}>
-                            Split
+                            AutoSplit
+                        </Button>
+                    </Box>
+                    <Box m={1}>
+                        <Button id="set-train" variant="contained" onClick={() =>
+                            {
+                                fetch(process.env.REACT_APP_API_URL + '/peoples_speech/setsplit',
+                                    {
+                                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                                        headers: {
+                                          'Content-Type': 'application/json'
+                                          // 'Content-Type': 'application/x-www-form-urlencoded',
+                                        },
+                                        body: JSON.stringify({ view : this.state.view, images : this.state.images, type: "train" }) // body data type must match "Content-Type" header
+
+                                    }
+                                )
+                                .then(res => res.json())
+                                .then((data) => {
+                                    console.log("Got response: ", data);
+                                })
+                                .catch(console.log)
+                            }}>
+                            Set Train
+                        </Button>
+                    </Box>
+                    <Box m={1}>
+                        <Button id="set-test" variant="contained" onClick={() =>
+                            {
+                                fetch(process.env.REACT_APP_API_URL + '/peoples_speech/setsplit',
+                                    {
+                                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                                        headers: {
+                                          'Content-Type': 'application/json'
+                                          // 'Content-Type': 'application/x-www-form-urlencoded',
+                                        },
+                                        body: JSON.stringify({ view : this.state.view, images : this.state.images, type: "test" }) // body data type must match "Content-Type" header
+                                    }
+                                )
+                                .then(res => res.json())
+                                .then((data) => {
+                                    console.log("Got response: ", data);
+                                })
+                                .catch(console.log)
+                            }}>
+                            Set Test
+
                         </Button>
                     </Box>
                     <Box m={1}>
@@ -164,6 +215,24 @@ export default class DataManager extends React.Component {
                                     <AudioButton url={`${item.audio}`} />
                                 }
                             />
+                            <ImageListItemBar
+                                sx={{
+                                    background:
+                                        'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, ' +
+                                        'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                                }}
+                                title={getTrainTestString(item)}
+                                position="top"
+                                actionIcon={
+                                    <IconButton
+                                        sx={{ color: 'white' }}
+                                              aria-label={`star ${getTrainTestString(item)}`}
+                                    >
+                                        <StarBorderIcon />
+                                    </IconButton>
+                                }
+                                actionPosition="left"
+                            />
                         </ImageListItem>
                       ))}
                     </ImageList>
@@ -172,6 +241,16 @@ export default class DataManager extends React.Component {
     }
 }
 
+function getTrainTestString(item) {
+    if (item.train) {
+        return "train";
+    }
+    if (item.test) {
+        return "test";
+    }
+    return "unsplit";
+}
++
 
 
 

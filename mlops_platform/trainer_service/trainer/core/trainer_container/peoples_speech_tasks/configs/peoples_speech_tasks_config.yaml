@@ -2,16 +2,18 @@
 model:
     type: "keyword"
     label: "prestamo"
-    repeat: 32
+    repeat: 4
     batch_size: 2
     epochs: 10
-    patience: 10
+    patience: 3
+    shuffle_buffer_size: 16
 
-    save_path: "s3://peoples-speech/models/prestamo/15b8b34a77992a5866eaf00ac0ceab35"
-    results_path: "s3://peoples-speech/models/prestamo/15b8b34a77992a5866eaf00ac0ceab35/results.json"
+    save_path: "s3://peoples-speech/models/prestamo/efc19a0d2ebba02e26281a8235ece1c6"
+    local_save_path: "/app/models"
+    results_path: "s3://peoples-speech/models/prestamo/efc19a0d2ebba02e26281a8235ece1c6/results.json"
 
 dataset:
-    path: "s3://peoples-speech/datasets/prestamo/15b8b34a77992a5866eaf00ac0ceab35.jsonlines"
+    path: "s3://peoples-speech/datasets/prestamo/955c16269fbd3fe2553e203e56a0b8c6.jsonlines"
 
 verbose: True
 verbose_info: True

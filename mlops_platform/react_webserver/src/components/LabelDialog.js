@@ -58,7 +58,7 @@ export default class LabelDialog extends React.Component {
         return (
         <div>
             <Button variant="contained" onClick={this.handleClickOpen}>
-                Label Selected
+                Label
             </Button>
             <Dialog open={this.state.open} onClose={this.props.handleClose}>
                 <DialogTitle>Labeling Task</DialogTitle>

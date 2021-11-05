@@ -1,7 +1,7 @@
 import './App.css';
 
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import { Button } from '@material-ui/core';
 
 import ButtonAppBar from './components/Header'
@@ -20,22 +20,22 @@ class App extends React.Component {
         return (
             <div>
                 <ButtonAppBar />
-                    <Router>
-                        <div>
-                              <Link to="/"><Button color="inherit">Home</Button></Link>
-                              <Link to="/data"><Button color="inherit">Data</Button></Link>
-                              <Link to="/model"><Button color="inherit">Model</Button></Link>
-                              <Link to="/deploy"><Button color="inherit">Deploy</Button></Link>
+                    <BrowserRouter>
+                        <Link to="/"><Button color="inherit">Home</Button></Link>
+                        <Link to="/data"><Button color="inherit">Data</Button></Link>
+                        <Link to="/model"><Button color="inherit">Model</Button></Link>
+                        <Link to="/deploy"><Button color="inherit">Deploy</Button></Link>
 
-                          <hr />
+                        <hr />
 
-                          <Route exact path="/" component={Home} />
-                          <Route path="/data" component={DataManager} />
-                          <Route path="/model" component={ModelIteration} />
-                          <Route path="/deploy" component={Deploy} />
-                        </div>
-                    </Router>
-                <MyButton/>
+                        <Routes>
+                            <Route exact path="/" element={<Home />} />
+                            <Route path="/data" element={<DataManager/>} />
+                            <Route path="/model" element={<ModelIteration/>} />
+                            <Route path="/deploy" element={<Deploy/>} />
+                        </Routes>
+                    </BrowserRouter>
+                <MyButton />
             </div>
         );
     }

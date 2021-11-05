@@ -1,14 +1,8 @@
 FROM python:3.9 as base
 
-RUN apt-get -yq update && \
-    apt-get install -yqq npm && \
-    apt-get install -yqq libsndfile1
-
 WORKDIR /app/trainer
 COPY ./requirements.txt /app/trainer/requirements.txt
 RUN pip install -r requirements.txt
-
-RUN apt-get install -yqq ffmpeg
 
 COPY . /app/trainer
 WORKDIR /app/trainer
