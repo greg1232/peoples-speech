@@ -10,14 +10,7 @@ The people's speech is an enterprise MLOps platform that offers end-to-end workf
   git clone git@github.com:greg1232/peoples-speech.git
 ```
 
-2. Build the server docker container.
-
-```shell
-cd peoples-speech
-./scripts/build.sh
-```
-
-3. Start the development server locally.
+2. Build the server docker container and start the development server locally.
 
 ```shell
 ./scripts/peoples-speech-up
