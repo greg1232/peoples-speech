@@ -22,7 +22,7 @@ The people's speech is an enterprise MLOps platform that offers end-to-end workf
 
 # Deployments
 
-The main branch of this repo deploys automatically to a staging service at www.peoples-speech.com:3000 using [an AWS CodePipeline](https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html)
+The main branch of this repo deploys automatically to a staging service at www.peoples-speech.com using [an AWS CodePipeline](https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html)
 
 The CodePipeline performs the following steps:
   * Checks out from the main branch of this repo
