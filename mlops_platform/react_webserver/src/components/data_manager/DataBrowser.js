@@ -129,7 +129,7 @@ export default class DataBrowser extends React.Component {
                                 .then(res => res.json())
                                 .then((data) => {
                                     console.log("Got response: ", data);
-                                    this.props.setShouldUpdate();
+                                    this.props.switchToTasks();
                                 })
                                 .catch(console.log)
                             }}>

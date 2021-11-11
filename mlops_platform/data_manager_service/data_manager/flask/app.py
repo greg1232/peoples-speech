@@ -13,6 +13,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+###
+## Data Browser
+###
 @app.route('/peoples_speech/upload', methods=['GET', 'POST'])
 def upload():
     logger.debug("Uploading audio data from: " + str(request.json))
@@ -41,6 +44,7 @@ def autosplit():
 def setsplit():
     logger.debug("Splitting data with view: " + str(request.json))
     data_manager.setsplit(request.json["view"], request.json["images"], request.json["type"])
+    return { "status" : "ok"}
 
 @app.route('/peoples_speech/get_view', methods=['GET', 'POST'])
 def get_view():
@@ -59,6 +63,32 @@ def register_uploaded_audio():
     logger.debug("Getting upload url of file: " + str(request.json))
     entry = data_manager.register_uploaded_audio(request.json["path"])
     return entry
+
+###
+## Transcription
+###
+
+@app.route('/peoples_speech/get_transcription_tasks', methods=['GET', 'POST'])
+def get_transcription_tasks():
+    logger.debug("Getting transcription tasks...")
+    tasks = data_manager.get_transcription_tasks()
+    return { "tasks" : tasks }
+
+@app.route('/peoples_speech/get_transcription_utterances', methods=['GET', 'POST'])
+def get_transcription_utterances():
+    logger.debug("Getting transcription utterances...")
+    utterances = data_manager.get_transcription_utterances(request.json["uid"])
+    return { "utterances" : utterances }
+
+@app.route('/peoples_speech/make_transcription_task', methods=['GET', 'POST'])
+def make_transcription_task():
+    logger.debug("Making transcription task: " + str(request.json))
+    data_manager.make_transcription_task(request.json["view"], request.json["images"])
+    return { "status" : "ok"}
+
+###
+## Model Iteration
+###
 
 @app.route('/peoples_speech/get_exported_datasets', methods=['GET', 'POST'])
 def get_exported_datasets():

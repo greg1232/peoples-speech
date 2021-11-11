@@ -1,11 +1,8 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Brush, ReferenceLine } from 'recharts';
+
+import { LineChart, Line, XAxis, Tooltip, CartesianGrid, Brush, ReferenceLine } from 'recharts';
 
 export default class ThresholdChart extends React.Component {
-    constructor(props){
-        super(props);
-    }
-
     static displayName = "ThresholdChart";
 
     getAudioData() {
@@ -89,7 +86,7 @@ const audios = [
 ThresholdChart.defaultProps = {
     audios: audios,
     threshold: 0.3,
-    buckets: 10,
+    buckets: 20,
     concepts: ["none", "prestamo"]
 };
 

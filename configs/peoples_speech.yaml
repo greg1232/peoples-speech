@@ -21,6 +21,9 @@ data_manager:
     upload:
         path: "s3://peoples-speech/datasets/prestamo/uploads"
 
+transcription:
+    task_table_name: "transcription_tasks"
+
 model_iteration:
     training_path: "s3://peoples-speech/models/prestamo"
     job_table_name: "training_jobs"

@@ -34,6 +34,7 @@ export default class MetricsDialog extends React.Component {
         this.setState({threshold : value});
 
         this.handleConfusionMatrixUpdate(this.state.audios);
+        this.props.setThreshold(this.props.uid, value);
     }
 
     getResults() {

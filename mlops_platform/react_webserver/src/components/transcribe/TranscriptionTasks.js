@@ -68,7 +68,7 @@ export default class TranscriptionTasks extends React.Component {
                                             {
                                                 console.log("Updated transcription task uid to: " + row.uid);
                                                 this.props.setUid(row.uid);
-                                                this.props.switchToTasks();
+                                                this.props.switchToTool();
                                             }}>
                                             Transcribe
                                         </Button>
