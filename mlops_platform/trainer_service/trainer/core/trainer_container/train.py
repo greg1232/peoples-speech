@@ -39,7 +39,9 @@ def main():
         logger.error(str(e))
 
 
-    config = get_config(training_config)
+    logger.debug("Loaded training config: " + str(training_config))
+
+    config = get_config(training_config["model_iteration"]["trainer"])
     logger.debug("Loaded config: " + str(config))
 
     logger.debug("Loading training dataset...")

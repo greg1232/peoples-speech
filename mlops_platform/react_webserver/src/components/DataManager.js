@@ -1,259 +1,74 @@
 
 import React from 'react';
-import { Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, Box, ImageListItemBar, IconButton } from '@material-ui/core';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import UploadDialog from './UploadDialog'
-import LabelDialog from './LabelDialog'
-import ExportDialog from './ExportDialog'
-import AudioButton from './AudioButton'
+import PropTypes from 'prop-types';
 
-export default class DataManager extends React.Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            images: [ ],
-            view: {
-                split: {
-                    train : false,
-                    test : false
-                },
-                labels: {
-                    labeled : true
-                }
-            }
-        }
-        this.handleImagesUpdate = this.handleImagesUpdate.bind(this);
-        this.handleTrainUpdate = this.handleTrainUpdate.bind(this);
-        this.handleTestUpdate = this.handleTestUpdate.bind(this);
-        this.handleLabeledUpdate = this.handleLabeledUpdate.bind(this);
-        this.handleImageClick= this.handleImageClick.bind(this);
-        this.getView = this.getView.bind(this);
-    }
+import { Box, Tab, Tabs } from '@material-ui/core';
 
-    handleImageClick(item) {
-        if (item.selected === 1) {
-            item.selected = 0;
-        }
-        else {
-            item.selected = 1;
-        }
-        this.setState({images: this.state.images});
-    }
+import DataBrowser from './data_manager/DataBrowser.js'
+import TranscriptionTasks from './transcribe/TranscriptionTasks.js'
+import TranscriptionTool from './transcribe/TranscriptionTool.js'
 
-    handleImagesUpdate(data) {
-        let new_images = data["images"].map((image) => ({
-            label: image["label"],
-            img: image["url"],
-            train: image["train"],
-            test: image["test"],
-            audio : image["audio_url"],
-            uid: image["uid"],
-            title: "uploaded",
-            selected: 0}));
-        this.setState({images: new_images});
-    }
+export default function DataManager(props) {
+  const [value, setValue] = React.useState(0);
+  const [uid, setUid] = React.useState(0);
 
-    handleTrainUpdate() {
-        console.log("updated train: ");
-        var view = {...this.state.view};
-        view.split.train = !view.split.train;
-        this.setState({view});
-        this.getView();
-    }
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-    handleTestUpdate() {
-        console.log("updated test: ");
-        var view = {...this.state.view};
-        view.split.test = !view.split.test;
-        this.setState({view});
-        this.getView();
-    }
+  const switchToTasks = () => {
+    setValue(1);
+  };
 
-    handleLabeledUpdate() {
-        console.log("updated labeled: ");
-        var view = {...this.state.view};
-        view.labels.labeled = !view.labels.labeled;
-        this.setState({view});
-        this.getView();
-    }
+  const switchToTool = () => {
+    setValue(2);
+  };
 
-    getView() {
-        if(!this.state.view.split.train) {
-            delete this.state.view.split.train;
-        }
-        if(!this.state.view.split.test) {
-            delete this.state.view.split.test;
-        }
-
-        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/get_view',
-            {
-                method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                headers: {
-                  'Content-Type': 'application/json'
-                  // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: JSON.stringify({ view : this.state.view }) // body data type must match "Content-Type" header
-            }
-        )
-        .then(res => res.json())
-        .then((data) => {
-            console.log("Got response: ", data);
-            this.handleImagesUpdate(data);
-        })
-        .catch(console.log)
-    }
-
-    componentDidMount() {
-        this.getView();
-    }
-
-    render() {
-        return <div>
-                <Grid container justifyContent = "center">
-                    <UploadDialog getView={this.getView} />
-                </Grid>
-                <Grid container justifyContent = "center">
-                    <Box m={1}>
-                        <LabelDialog images={this.state.images} view={this.state.view} getView={this.getView} />
-                    </Box>
-                    <Box m={1}>
-                        <Button id="autosplit" variant="contained" onClick={() =>
-                            {
-                                fetch(process.env.REACT_APP_API_URL + '/peoples_speech/autosplit',
-                                    {
-                                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                                        headers: {
-                                          'Content-Type': 'application/json'
-                                          // 'Content-Type': 'application/x-www-form-urlencoded',
-                                        },
-                                        body: JSON.stringify({ view : this.state.view, images : this.state.images}) // body data type must match "Content-Type" header
-                                    }
-                                )
-                                .then(res => res.json())
-                                .then((data) => {
-                                    console.log("Got response: ", data);
-                                    this.getView();
-                                })
-                                .catch(console.log)
-                            }}>
-                            AutoSplit
-                        </Button>
-                    </Box>
-                    <Box m={1}>
-                        <Button id="set-train" variant="contained" onClick={() =>
-                            {
-                                fetch(process.env.REACT_APP_API_URL + '/peoples_speech/setsplit',
-                                    {
-                                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                                        headers: {
-                                          'Content-Type': 'application/json'
-                                          // 'Content-Type': 'application/x-www-form-urlencoded',
-                                        },
-                                        body: JSON.stringify({ view : this.state.view, images : this.state.images, type: "train" }) // body data type must match "Content-Type" header
-
-                                    }
-                                )
-                                .then(res => res.json())
-                                .then((data) => {
-                                    console.log("Got response: ", data);
-                                    this.getView();
-                                })
-                                .catch(console.log)
-                            }}>
-                            Set Train
-                        </Button>
-                    </Box>
-                    <Box m={1}>
-                        <Button id="set-test" variant="contained" onClick={() =>
-                            {
-                                fetch(process.env.REACT_APP_API_URL + '/peoples_speech/setsplit',
-                                    {
-                                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                                        headers: {
-                                          'Content-Type': 'application/json'
-                                          // 'Content-Type': 'application/x-www-form-urlencoded',
-                                        },
-                                        body: JSON.stringify({ view : this.state.view, images : this.state.images, type: "test" }) // body data type must match "Content-Type" header
-                                    }
-                                )
-                                .then(res => res.json())
-                                .then((data) => {
-                                    console.log("Got response: ", data);
-                                    this.getView();
-                                })
-                                .catch(console.log)
-                            }}>
-                            Set Test
-
-                        </Button>
-                    </Box>
-                    <Box m={1}>
-                        <ExportDialog images={this.state.images} view={this.state.view} />
-                    </Box>
-                </Grid>
-                <Grid container justifyContent = "center">
-                    <FormGroup row={true}>
-                      <FormControlLabel control={<Checkbox onClick={this.handleTrainUpdate} />} label="Train" />
-                      <FormControlLabel control={<Checkbox onClick={this.handleTestUpdate} />} label="Test" />
-                      <FormControlLabel control={<Checkbox onClick={this.handleLabeledUpdate} defaultChecked />} label="Labeled" />
-                    </FormGroup>
-                </Grid>
-                <br />
-                <Grid container justifyContent = "center">
-                    <ImageList sx={{ width: 1000, height: 450 }} cols={6} rowHeight={164}>
-                      {this.state.images.map((item) => (
-                        <ImageListItem key={item.img} sx={{ border: item.selected }} onClick={() => this.handleImageClick(item)}>
-                            <img
-                                src={`${item.img}`}
-                                srcSet={`${item.img}`}
-                                alt={item.title}
-                            />
-                            <ImageListItemBar
-                                title={item.label}
-                                actionIcon={
-                                    <AudioButton url={`${item.audio}`} />
-                                }
-                            />
-                            <ImageListItemBar
-                                sx={{
-                                    background:
-                                        'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, ' +
-                                        'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-                                }}
-                                title={getTrainTestString(item)}
-                                position="top"
-                                actionIcon={
-                                    <IconButton
-                                        sx={{ color: 'white' }}
-                                              aria-label={`star ${getTrainTestString(item)}`}
-                                    >
-                                        <StarBorderIcon />
-                                    </IconButton>
-                                }
-                                actionPosition="left"
-                            />
-                        </ImageListItem>
-                      ))}
-                    </ImageList>
-                </Grid>
-            </div>;
-    }
+  return (
+    <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 700 }}>
+      <Tabs orientation="vertical" value={value} onChange={handleChange} aria-label="data-manager-tabs" sx={{ borderRight: 1, borderColor: 'divider' }} >
+        <Tab label="Dataset" {...a11yProps(0)} />
+        <Tab label="Jobs" {...a11yProps(1)} />
+        <Tab label="Transcribe" {...a11yProps(2)} />
+      </Tabs>
+      <TabPanel value={value} index={0}> <DataBrowser switchToTasks={switchToTasks} /> </TabPanel>
+      <TabPanel value={value} index={1}> <TranscriptionTasks switchToTool={switchToTool} setUid={setUid} /> </TabPanel>
+      <TabPanel value={value} index={2}> <TranscriptionTool uid={uid} /> </TabPanel>
+    </Box>
+  );
 }
 
-function getTrainTestString(item) {
-    if (item.train) {
-        return "train";
-    }
-    if (item.test) {
-        return "test";
-    }
-    return "unsplit";
+function a11yProps(index) {
+  return {
+    id: `vertical-tab-${index}`,
+    'aria-controls': `vertical-tabpanel-${index}`,
+  };
 }
 
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
 
 

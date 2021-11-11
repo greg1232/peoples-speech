@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { Grid, Button, FormControl, InputLabel, Select, Box, MenuItem } from '@material-ui/core';
-import { Table, TableBody, TableHead, TableRow, TableCell, Paper, TableContainer } from '@material-ui/core';
+import { Table, TableBody, TableHead, TableRow, TableCell, Paper, TableContainer, Container } from '@material-ui/core';
 
-import ErrorAnalysisDialog from './ErrorAnalysisDialog.js'
-import MetricsDialog from './MetricsDialog.js'
+import ErrorAnalysisDialog from './model_iteration/ErrorAnalysisDialog.js'
+import MetricsDialog from './model_iteration/MetricsDialog.js'
 
 export default class ModelIteration extends React.Component {
     constructor(props){
@@ -14,11 +14,14 @@ export default class ModelIteration extends React.Component {
             datasets : [],
             dataset: {},
             model : {},
+            thresholds : {},
             jobs: []
         }
         this.handleDatasetsUpdate = this.handleDatasetsUpdate.bind(this);
         this.handleDatasetUpdate = this.handleDatasetUpdate.bind(this);
         this.handleJobUpdate = this.handleJobUpdate.bind(this);
+        this.setThreshold = this.setThreshold.bind(this);
+        this.getThreshold = this.getThreshold.bind(this);
     }
 
     handleDatasetsUpdate(datasets) {
@@ -37,6 +40,21 @@ export default class ModelIteration extends React.Component {
     handleJobUpdate(jobs) {
         console.log("updated jobs: " + jobs);
         this.setState({jobs: jobs["jobs"]});
+    }
+
+    setThreshold(uid, threshold) {
+        let thresholds = {...this.state.thresholds};
+
+        thresholds[uid] = threshold;
+
+        this.setState({thresholds : thresholds});
+    }
+
+    getThreshold(uid) {
+        if (!(uid in this.state.thresholds)) {
+            return 0.3;
+        }
+        return this.state.thresholds[uid];
     }
 
     componentDidMount() {
@@ -131,39 +149,50 @@ export default class ModelIteration extends React.Component {
                     </Box>
                 </Grid>
 
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Model Name</TableCell>
-                                <TableCell align="right">Accuracy</TableCell>
-                                <TableCell align="right">Start Time</TableCell>
-                                <TableCell align="right">End Time</TableCell>
-                                <TableCell align="right">Status</TableCell>
-                                <TableCell align="right">Metrics</TableCell>
-                                <TableCell align="right">Action</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {this.state.jobs.map((row) => (
-                              <TableRow
-                                key={row.train_config_path}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                              >
-                                <TableCell component="th" scope="row">
-                                  {row.name}
-                                </TableCell>
-                                <TableCell align="right">{accuracyToFixed(row.accuracy)}</TableCell>
-                                <TableCell align="right">{timestampToString(row.start_time)}</TableCell>
-                                <TableCell align="right">{timestampToString(row.end_time)}</TableCell>
-                                <TableCell align="right">{row.status}</TableCell>
-                                <TableCell align="right"> <MetricsDialog uid={row.uid} /> </TableCell>
-                                <TableCell align="right"> <ErrorAnalysisDialog uid={row.uid} /> </TableCell>
-                              </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <Container maxWidth="lg">
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 600 }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Model Name</TableCell>
+                                    <TableCell align="right">Accuracy</TableCell>
+                                    <TableCell align="right">Start Time</TableCell>
+                                    <TableCell align="right">End Time</TableCell>
+                                    <TableCell align="right">Status</TableCell>
+                                    <TableCell align="right">Metrics</TableCell>
+                                    <TableCell align="right">Action</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {this.state.jobs.map((row) => (
+                                  <TableRow
+                                    key={row.train_config_path}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                  >
+                                    <TableCell component="th" scope="row">
+                                      {row.name}
+                                    </TableCell>
+                                    <TableCell align="right">{accuracyToFixed(row.accuracy)}</TableCell>
+                                    <TableCell align="right">{timestampToString(row.start_time)}</TableCell>
+                                    <TableCell align="right">{timestampToString(row.end_time)}</TableCell>
+                                    <TableCell align="right">{row.status}</TableCell>
+                                    <TableCell align="right">
+                                        <MetricsDialog
+                                            uid={row.uid}
+                                            getThreshold={this.getThreshold}
+                                            setThreshold={this.setThreshold} />
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <ErrorAnalysisDialog
+                                            uid={row.uid}
+                                            getThreshold={this.getThreshold}/>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Container>
             </div>;
     }
 }

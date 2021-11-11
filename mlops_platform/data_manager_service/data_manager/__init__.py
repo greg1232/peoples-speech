@@ -9,6 +9,11 @@ from data_manager.core.get_error_analysis_results import get_error_analysis_resu
 from data_manager.core.autosplit import autosplit
 from data_manager.core.setsplit import setsplit
 from data_manager.core.export import export
+
+from data_manager.transcription.get_transcription_tasks import get_transcription_tasks
+from data_manager.transcription.get_transcription_utterances import get_transcription_utterances
+from data_manager.transcription.make_transcription_task import make_transcription_task
+
 from data_manager.trainer.get_training_jobs import get_training_jobs
 from data_manager.trainer.get_exported_datasets import get_exported_datasets
 from data_manager.trainer.train import train

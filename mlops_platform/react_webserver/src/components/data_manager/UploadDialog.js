@@ -37,21 +37,23 @@ export default class UploadDialog extends React.Component {
 
         return (
         <div>
-            <Button variant="contained" onClick={this.handleClickOpen}>
-                Upload Files
-            </Button>
-            <Dialog open={this.state.open} onClose={this.handleClose}>
-                <DialogTitle>Upload audio files</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Drag audio files to upload them.
-                    </DialogContentText>
-                    <UploadTabs getView={this.props.getView} />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleClose}>Close</Button>
-                </DialogActions>
-            </Dialog>
+            <Box m={1}>
+                <Button variant="contained" onClick={this.handleClickOpen}>
+                    Upload
+                </Button>
+                <Dialog open={this.state.open} onClose={this.handleClose}>
+                    <DialogTitle>Upload audio files</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Drag audio files to upload them.
+                        </DialogContentText>
+                        <UploadTabs getView={this.props.getView} />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose}>Close</Button>
+                    </DialogActions>
+                </Dialog>
+            </Box>
         </div>
         );
     }

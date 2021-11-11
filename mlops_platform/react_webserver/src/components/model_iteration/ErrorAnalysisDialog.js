@@ -27,8 +27,10 @@ export default class ErrorAnalysisDialog extends React.Component {
     handleImagesUpdate(data) {
         let new_images = data["audios"].map((image) => ({
             img: image["url"],
-            audio_url: image["audio_url"],
+            audioUrl: image["audio_url"],
             label: image["label"],
+            score: image["score"],
+            targetConcept: image["target_concept"],
             prediction: image["prediction"],
             uid: image["uid"]}));
         this.setState({images: new_images});
@@ -53,6 +55,13 @@ export default class ErrorAnalysisDialog extends React.Component {
             this.handleImagesUpdate(data);
         })
         .catch(console.log)
+    }
+
+    getPrediction(item) {
+        if (item.score > this.props.getThreshold(this.props.uid)) {
+            return item.targetConcept;
+        }
+        return "none";
     }
 
     render() {
@@ -84,7 +93,7 @@ export default class ErrorAnalysisDialog extends React.Component {
                                         Label: <q>{item.label}</q>
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
-                                        Prediction: <q>{item.prediction}</q>
+                                        Prediction: <q>{this.getPrediction(item)}</q>
                                     </Typography>
                                 </CardContent>
                             </Card>

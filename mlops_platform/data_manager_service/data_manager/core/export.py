@@ -2,6 +2,7 @@
 from data_manager.support.database import Database
 from data_manager.util.config import get_config
 from data_manager.support.get_url import get_url
+from data_manager.core.util.get_results import get_results
 
 from smart_open import open
 import jsonlines
@@ -40,21 +41,4 @@ def export(view, images, name):
     exported_database.insert({"id" : hash_md5.hexdigest(), "path" : dataset_path, "name" : name})
 
     return dataset_path
-
-def get_results(view, images, config):
-
-    logger.debug("Searching for view: " + str(view))
-    logger.debug(" with images: " + str(images))
-
-    database = Database(config["data_manager"]["table_name"], config)
-
-    view["selected"] = { "uid" : [] }
-
-    for image in images:
-        if image["selected"] > 0:
-            view["selected"]["uid"].append(image["uid"])
-
-    results = database.search(view)
-
-    return results
 

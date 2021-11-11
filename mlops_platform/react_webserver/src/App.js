@@ -30,9 +30,9 @@ class App extends React.Component {
 
                         <Routes>
                             <Route exact path="/" element={<Home />} />
-                            <Route path="/data" element={<DataManager/>} />
-                            <Route path="/model" element={<ModelIteration/>} />
-                            <Route path="/deploy" element={<Deploy/>} />
+                            <Route path="/data" element={<DataManager />} />
+                            <Route path="/model" element={<ModelIteration />} />
+                            <Route path="/deploy" element={<Deploy />} />
                         </Routes>
                     </BrowserRouter>
                 <MyButton />
