@@ -1,0 +1,32 @@
+FROM arm64v8/ubuntu:20.04 as arm64
+
+ENV PIP_EXTRA_INDEX_URL=https://snapshots.linaro.org/ldcg/python-cache/
+RUN apt update -yqq && apt install -yqq python3 python3-pip wget
+RUN apt install -yqq libmp3lame-dev
+
+WORKDIR /tmp
+RUN python3 -m pip install --upgrade pip
+RUN wget https://snapshots.linaro.org/ldcg/python-cache/grpcio/grpcio-1.41.1-cp38-cp38-manylinux_2_17_aarch64.whl
+RUN mv grpcio-1.41.1-cp38-cp38-manylinux_2_17_aarch64.whl grpcio-1.41.1-cp38-none-any.whl
+RUN pip install grpcio-1.41.1-cp38-none-any.whl
+
+WORKDIR /app/deploy_service
+COPY ./requirements.txt /app/deploy_service/requirements.txt
+RUN pip --no-cache-dir install -r requirements.txt
+
+COPY . /app/deploy_service
+
+# Developement target
+FROM arm64 as development
+
+RUN chmod a+x /app/deploy_service/scripts/start-dev.sh
+
+ENTRYPOINT ["/app/deploy_service/scripts/start-dev.sh"]
+
+# Staging target
+FROM arm64 as staging
+
+RUN chmod a+x /app/deploy_service/scripts/start-staging.sh
+
+ENTRYPOINT ["/app/deploy_service/scripts/start-staging.sh"]
+

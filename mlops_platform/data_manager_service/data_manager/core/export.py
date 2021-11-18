@@ -19,7 +19,8 @@ def export(view, images, name):
 
     config = get_config()
 
-    results = get_results(view, images, config)
+    database = Database(config["data_manager"]["table_name"], config)
+    results = get_results(database, view, images, config)
 
     logger.debug("Got database results: " + str(results))
 

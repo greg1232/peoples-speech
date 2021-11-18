@@ -1,0 +1,8 @@
+flask
+flask_cors
+python-configuration[yaml]
+smart_open[s3,gcs]
+jsonlines
+tensorflow-io==0.20.0
+tinydb
+google-cloud-speech

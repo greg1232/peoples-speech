@@ -45,6 +45,8 @@ def convert_audio(entry):
 
     with open(entry["audio_path"], "rb") as audio_file:
         audio = AudioSegment.from_file(audio_file, format=extension[1][1:])
+        audio.set_frame_rate(16000)
+        audio.set_channels(2)
 
     with open(new_path, "wb") as new_file:
         with io.BytesIO() as temp_file:

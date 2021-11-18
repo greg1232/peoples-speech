@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Paper, TextField, Grid } from '@material-ui/core';
+import { Paper, TextField, Grid, Button } from '@material-ui/core';
 import { styled } from '@material-ui/core';
 
 import AudioButton from '../data_manager/AudioButton'
@@ -61,41 +61,64 @@ export default class TranscriptionTool extends React.Component {
     }
 
     keyPress(uid, e){
-      if(e.keyCode === 13){
-         console.log('value', e.target.value);
-         fetch(process.env.REACT_APP_API_URL + '/peoples_speech/set_labels',
-             {
-                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                 headers: {
-                   'Content-Type': 'application/json'
-                   // 'Content-Type': 'application/x-www-form-urlencoded',
-                 },
-                 body: JSON.stringify({
-                     view : {},
-                     images : [ {selected: true, uid: uid} ],
-                     label : this.state.utterances[uid].label}) // body data type must match "Content-Type" header
-             }
-         )
-         .then(res => res.json())
-         .then((data) => {
-             console.log("Got response: ", data);
-             this.refresh();
-         }).catch(console.log)
-      }
-   }
+        if(e.keyCode === 13){
+           console.log('value', e.target.value);
+           fetch(process.env.REACT_APP_API_URL + '/peoples_speech/set_labels',
+               {
+                   method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                   cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                   headers: {
+                     'Content-Type': 'application/json'
+                     // 'Content-Type': 'application/x-www-form-urlencoded',
+                   },
+                   body: JSON.stringify({
+                       view : {},
+                       images : [ {selected: true, uid: uid} ],
+                       label : this.state.utterances[uid].label}) // body data type must match "Content-Type" header
+               }
+           )
+           .then(res => res.json())
+           .then((data) => {
+               console.log("Got response: ", data);
+               this.refresh();
+           }).catch(console.log)
+        }
+    }
+
+    autoLabel(uid) {
+        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/auto_label',
+            {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                headers: {
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({
+                    view : {},
+                    images : [ {selected: true, uid: uid} ],
+                    label : this.state.utterances[uid].label}) // body data type must match "Content-Type" header
+            }
+        )
+        .then(res => res.json())
+        .then((data) => {
+            console.log("Got response: ", data);
+            this.refresh();
+        }).catch(console.log)
+
+    }
 
     render() {
         return <div>
 
-                <Grid container spacing={2} columns={32}>
+                <Grid container spacing={2} columns={12} sx={{ minWidth: 800 }}>
                   {Object.keys(this.state.utterances).map((uid, index) => (
                     <>
-                    <Grid item xs={28}>
+                    <Grid item xs={8}>
                         <Item>
                             <TextField id={uid} label={this.state.utterances[uid].speaker}
                                 variant="outlined" value={this.state.utterances[uid].label}
-                                style = {{width: 500}}
+                                style = {{width: "95%"}}
                                 onKeyDown={(e) => {
                                     this.keyPress(uid, e);
                                 }}
@@ -105,10 +128,18 @@ export default class TranscriptionTool extends React.Component {
 
                         </Item>
                     </Grid>
-                    <Grid item xs={4}>
-                      <Item>
-                          <AudioButton url={this.state.utterances[uid].audio} />
-                      </Item>
+                    <Grid item xs={2}>
+
+                          <Button id="auto-label" variant="contained" onClick={() =>
+                              {
+                                  console.log("Autolabeling: " + uid);
+                                  this.autoLabel(uid);
+                              }}>
+                              AutoLabel
+                          </Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <AudioButton url={this.state.utterances[uid].audio} />
                     </Grid>
                     </>
                 ))}
