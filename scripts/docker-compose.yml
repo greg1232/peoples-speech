@@ -22,6 +22,24 @@ services:
     networks:
       - my-bridge
 
+  deploy-service:
+    build:
+      context: ../mlops_platform/deploy_service/
+      dockerfile: Dockerfile${DEPLOY_TARGET_SUFFIX}
+      target: development
+    ports:
+      - "5002:5002"
+
+    volumes:
+      - type: bind
+        source: ${HOME}/.aws
+        target: /root/.aws
+        read_only: true
+    networks:
+      my-bridge:
+        aliases:
+          - deploy
+
   trainer-service:
     build:
       context: ../mlops_platform/trainer_service/

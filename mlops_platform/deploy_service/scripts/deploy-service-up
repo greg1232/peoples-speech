@@ -1,0 +1,2 @@
+docker run --rm -it -p 5002:5002 -v $HOME/.aws:/root/.aws:ro deploy-service:latest
+

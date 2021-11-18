@@ -86,6 +86,12 @@ def make_transcription_task():
     data_manager.make_transcription_task(request.json["view"], request.json["images"])
     return { "status" : "ok"}
 
+@app.route('/peoples_speech/auto_label', methods=['GET', 'POST'])
+def auto_label():
+    logger.debug("Auto labeling: " + str(request.json))
+    data_manager.auto_label(request.json["view"], request.json["images"])
+    return { "status" : "ok"}
+
 ###
 ## Model Iteration
 ###

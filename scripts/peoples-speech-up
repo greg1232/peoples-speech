@@ -10,6 +10,23 @@ set -Eeuoxa pipefail
 # Get the directory of this script
 LOCAL_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+get_deploy_target_suffix() {
+    machine=$(uname -m)
+    if [[ $machine == arm* ]]
+    then
+        echo ".arm"
+    else
+        echo ""
+    fi
+}
+
 $LOCAL_DIRECTORY/sync-configs.sh
 
-PEOPLES_SPEECH_TARGET="$(uname -m)" docker-compose -f ./scripts/docker-compose.yml up --build
+PEOPLES_SPEECH_TARGET="$(uname -m)" \
+DEPLOY_TARGET_SUFFIX="$(get_deploy_target_suffix)" \
+    docker-compose -f ./scripts/docker-compose.yml up --build
+
+
+
+
+

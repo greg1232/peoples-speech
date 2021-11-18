@@ -1,6 +1,8 @@
 
 import React from 'react';
 
+import { Button } from '@material-ui/core';
+
 export default class AudioButton extends React.Component {
     constructor(props){
         super(props)
@@ -28,7 +30,7 @@ export default class AudioButton extends React.Component {
     render() {
         return (
         <div>
-            <button onClick={this.togglePlay}>{this.state.play ? 'Pause' : 'Play'}</button>
+            <Button variant="contained" onClick={this.togglePlay}>{this.state.play ? 'Pause' : 'Play'}</Button>
         </div>
         );
     }

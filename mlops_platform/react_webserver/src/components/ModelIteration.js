@@ -1,8 +1,9 @@
 
 
 import React from 'react';
-import { Grid, Button, FormControl, InputLabel, Select, Box, MenuItem } from '@material-ui/core';
+import { Grid, Button, FormControl, InputLabel, Select, Box, MenuItem, Menu } from '@material-ui/core';
 import { Table, TableBody, TableHead, TableRow, TableCell, Paper, TableContainer, Container } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 
 import ErrorAnalysisDialog from './model_iteration/ErrorAnalysisDialog.js'
 import MetricsDialog from './model_iteration/MetricsDialog.js'
@@ -160,6 +161,7 @@ export default class ModelIteration extends React.Component {
                                     <TableCell align="right">End Time</TableCell>
                                     <TableCell align="right">Status</TableCell>
                                     <TableCell align="right">Metrics</TableCell>
+                                    <TableCell align="right">Analysis</TableCell>
                                     <TableCell align="right">Action</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -187,6 +189,8 @@ export default class ModelIteration extends React.Component {
                                             uid={row.uid}
                                             getThreshold={this.getThreshold}/>
                                     </TableCell>
+                                    <TableCell align="right"><ActionMenu model_uid={row.uid} /></TableCell>
+
                                   </TableRow>
                                 ))}
                             </TableBody>
@@ -210,5 +214,61 @@ function timestampToString(timestamp) {
     }
     var date = new Date(timestamp);
     return date.toLocaleTimeString("en-US");
+}
+
+function ActionMenu(props) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDeploy = () => {
+    fetch(process.env.REACT_APP_DEPOY_API_URL + '/peoples_speech/register_model',
+        {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: { model_uid: props.model_uid }
+        }
+    )
+    .then(res => res.json())
+    .then((data) => {
+        console.log("Got response: ", data);
+    })
+    .catch(console.log)
+
+    handleClose();
+  };
+
+  return (
+    <div>
+      <Button
+        id="action-button"
+        aria-controls="basic-menu"
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+        <MenuIcon />
+      </Button>
+      <Menu
+        id="action-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'action-button',
+        }}
+      >
+        <MenuItem onClick={handleDeploy}>Deploy</MenuItem>
+      </Menu>
+    </div>
+  );
 }
 
