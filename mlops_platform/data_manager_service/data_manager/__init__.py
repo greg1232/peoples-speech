@@ -19,3 +19,5 @@ from data_manager.trainer.get_training_jobs import get_training_jobs
 from data_manager.trainer.get_exported_datasets import get_exported_datasets
 from data_manager.trainer.train import train
 
+from data_manager.account.verify_account import verify_account
+

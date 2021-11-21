@@ -120,6 +120,15 @@ def get_error_analysis_results():
     results = data_manager.get_error_analysis_results(request.json["model_uid"])
     return { "audios" : results["audios"] }
 
+###
+## Authentication
+###
+@app.route('/peoples_speech/verify_account', methods=['GET', 'POST'])
+def verify_account():
+    logger.debug("Verfying account...")
+    response = data_manager.verify_account(request.json)
+    return response
+
 if __name__ == '__main__':
     data_manager.create_config()
     app.run(host='0.0.0.0', port=5001)
