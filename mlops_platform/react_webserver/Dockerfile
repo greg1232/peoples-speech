@@ -32,6 +32,9 @@ RUN npm install react-dropzone
 # Install devexpress
 RUN npm install recharts
 
+# Install google single sign on
+RUN npm install react-google-login
+
 COPY . /app/react_webserver
 
 # Developement target
