@@ -63,7 +63,7 @@ model_iteration:
             path: "s3://peoples-speech/datasets/prestamo/955c16269fbd3fe2553e203e56a0b8c6.jsonlines"
 
 account:
-    whitelist: ["gregory.diamos@gmail.com"]
+    whitelist: ["gregory.diamos@gmail.com", "ryan@aifund.ai"]
 
 credentials:
     path: "/home/ubuntu/.aws/credentials"

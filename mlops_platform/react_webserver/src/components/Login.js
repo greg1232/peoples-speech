@@ -23,14 +23,10 @@ export default class Login extends React.Component {
                         sm={6}
                         alignItems="center"
                         direction="column"
-                        justify="space-between"
+                        justifyContent="center"
                         style={{ padding: 10 }}
                     >
-                        <div />
-                        <div>
-                            <GoogleSingleSignOn setToken={this.props.setToken} />
-                        </div>
-                        <div />
+                        <GoogleSingleSignOn setToken={this.props.setToken} />
                     </Grid>
                 </Grid>
             </div>

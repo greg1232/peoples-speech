@@ -38,9 +38,6 @@ export default class GoogleSingleSignOn extends React.Component {
         if (is_granted) {
             this.props.setToken(response);
             console.log('Login Success: currentUser:', response.profileObj);
-            alert(
-              `Logged in successfully welcome ${response.profileObj.name} 😍. \n See console for full profile object.`
-            );
             refreshTokenSetup(response);
         }
         else {
@@ -49,6 +46,7 @@ export default class GoogleSingleSignOn extends React.Component {
     }
 
     onFailure(response) {
+        alert('Login failed.');
     }
 
     render() {

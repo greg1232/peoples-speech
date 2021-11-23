@@ -108,6 +108,28 @@ export default class TranscriptionTool extends React.Component {
 
     }
 
+    autoSplit(uid) {
+        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/auto_split',
+            {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                headers: {
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({
+                    view : {},
+                    images : [ {selected: true, uid: uid} ],
+                    label : this.state.utterances[uid].label}) // body data type must match "Content-Type" header
+            }
+        )
+        .then(res => res.json())
+        .then((data) => {
+            console.log("Got response: ", data);
+            this.refresh();
+        }).catch(console.log)
+    }
+
     render() {
         return <div>
 
@@ -136,6 +158,13 @@ export default class TranscriptionTool extends React.Component {
                                   this.autoLabel(uid);
                               }}>
                               AutoLabel
+                          </Button>
+                          <Button id="auto-split" variant="contained" onClick={() =>
+                              {
+                                  console.log("Autosplitting: " + uid);
+                                  this.autoSplit(uid);
+                              }}>
+                              AutoSplit
                           </Button>
                     </Grid>
                     <Grid item xs={2}>
