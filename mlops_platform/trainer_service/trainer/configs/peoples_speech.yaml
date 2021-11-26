@@ -24,6 +24,11 @@ data_manager:
 transcription:
     task_table_name: "transcription_tasks"
 
+alignment:
+    vad:
+        frame_duration_ms: 30
+        padding_duration_ms: 100
+
 deploy:
     device_table_name: "devices"
     metrics_table_name: "metrics"
@@ -32,7 +37,7 @@ deploy:
     model:
         path: "s3://peoples-speech/models/prestamo/04dae9c2bf4f705fb8068fdb33a4d8e0/best"
         type: "google"
-        language: "es"
+        language: "en"
         google_cloud_storage_path: "gs://peoples-speech/google-speech-to-text-staging"
 
     test:

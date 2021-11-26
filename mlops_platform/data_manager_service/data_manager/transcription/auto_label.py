@@ -21,7 +21,7 @@ def auto_label(view, audios):
 
         new_label = get_auto_label(result, config)
 
-        set_labels(view, audios, new_label)
+        set_labels(view, audios, {"label" : new_label})
 
 def get_auto_label(result, config):
     response = requests.post(

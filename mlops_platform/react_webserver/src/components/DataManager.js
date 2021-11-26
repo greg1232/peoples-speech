@@ -24,6 +24,25 @@ export default function DataManager(props) {
     setValue(2);
   };
 
+  React.useEffect(() => {
+    fetch(process.env.REACT_APP_API_URL + '/peoples_speech/get_transcription_tasks',
+        {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        }
+    )
+    .then(res => res.json())
+    .then((data) => {
+        if(data["tasks"].length > 0) {
+            setUid(data["tasks"][0].uid);
+        }
+    })
+    .catch(console.log)
+  });
+
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 700 }}>
       <Tabs orientation="vertical" value={value} onChange={handleChange} aria-label="data-manager-tabs" sx={{ borderRight: 1, borderColor: 'divider' }} >

@@ -9,7 +9,7 @@ global_config = None
 
 def create_config():
     global global_config
-    global_config = setup_config({})
+    global_config = setup_config()
 
     setup_logging(global_config)
 

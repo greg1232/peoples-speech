@@ -16,10 +16,10 @@ export default class Main extends React.Component {
             <div>
                 <Header setToken={this.props.setToken} />
                     <BrowserRouter>
-                        <Link to="/"><Button color="inherit">Home</Button></Link>
-                        <Link to="/data"><Button color="inherit">Data</Button></Link>
-                        <Link to="/model"><Button color="inherit">Model</Button></Link>
-                        <Link to="/deploy"><Button color="inherit">Deploy</Button></Link>
+                        <Link to="/" style={{ textDecoration: 'none' }} ><Button color="inherit">Home</Button></Link>
+                        <Link to="/data" style={{ textDecoration: 'none' }} ><Button color="inherit">Data</Button></Link>
+                        <Link to="/model" style={{ textDecoration: 'none' }} ><Button color="inherit">Model</Button></Link>
+                        <Link to="/deploy" style={{ textDecoration: 'none' }} ><Button color="inherit">Deploy</Button></Link>
 
                         <hr />
 

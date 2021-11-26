@@ -25,7 +25,7 @@ def upload():
 @app.route('/peoples_speech/set_labels', methods=['GET', 'POST'])
 def set_labels():
     logger.debug("Saving new labels: " + str(request.json))
-    data_manager.set_labels(request.json["view"], request.json["images"], request.json["label"])
+    data_manager.set_labels(request.json["view"], request.json["images"], {"label": request.json["label"]})
     return { "status" : "ok"}
 
 @app.route('/peoples_speech/export', methods=['GET', 'POST'])
@@ -90,6 +90,12 @@ def make_transcription_task():
 def auto_label():
     logger.debug("Auto labeling: " + str(request.json))
     data_manager.auto_label(request.json["view"], request.json["images"])
+    return { "status" : "ok"}
+
+@app.route('/peoples_speech/auto_segment', methods=['GET', 'POST'])
+def auto_segment():
+    logger.debug("Auto segmenting: " + str(request.json))
+    data_manager.auto_segment(request.json["view"], request.json["images"])
     return { "status" : "ok"}
 
 ###

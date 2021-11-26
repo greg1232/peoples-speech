@@ -28,7 +28,7 @@ def set_labels(view, images, label):
 
     hash_md5 = hashlib.md5()
 
-    hash_md5.update(label.encode('utf-8'))
+    hash_md5.update(json.dumps(label).encode('utf-8'))
 
     for result in results:
         label_path_base = os.path.join(os.path.dirname(os.path.dirname(result["audio_path"])), "new_labels")
@@ -37,9 +37,9 @@ def set_labels(view, images, label):
         logger.debug("Writing label to: " + str(label_path))
 
         with open(label_path, "w") as label_file:
-            json.dump({"label" : label}, label_file)
+            json.dump(label, label_file)
 
-        result["label"] = label
+        result["label"] = label["label"]
         result["label_path"] = label_path
         result["labeled"] = True
 
@@ -49,7 +49,12 @@ def set_labels(view, images, label):
 
 def update_transcription_database(transcription_database, result):
 
-    task = transcription_database.search({ "data" : {"uid" : result["uid"]}})[0]
+    tasks = transcription_database.search({ "data" : {"uid" : result["uid"]}})
+
+    if len(tasks) == 0:
+        return
+
+    task = tasks[0]
 
     task.update(result)
 

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Paper, TextField, Grid, Button } from '@material-ui/core';
+import { Paper, TextField, Grid, Button, Box } from '@material-ui/core';
 import { styled } from '@material-ui/core';
 
 import AudioButton from '../data_manager/AudioButton'
@@ -16,18 +16,21 @@ export default class TranscriptionTool extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            utterances : {}
+            utterances : []
         }
         this.handleUtteranceUpdate = this.handleUtteranceUpdate.bind(this);
         this.handleLabelUpdate = this.handleLabelUpdate.bind(this);
         this.keyPress = this.keyPress.bind(this);
     }
 
-    handleUtteranceUpdate(utterances) {
-        console.log("updated utterances: " + utterances);
-        let dictionary = utterances["utterances"].reduce((a,x) => ({...a, [x.uid]: x}), {})
+    handleUtteranceUpdate(response) {
+        console.log("updated utterances: " + response);
 
-        this.setState({utterances: dictionary});
+        for (const [index, utterance] of response["utterances"].entries()) {
+            utterance.index = index;
+        }
+
+        this.setState({utterances: response["utterances"]});
     }
 
     refresh() {
@@ -53,14 +56,14 @@ export default class TranscriptionTool extends React.Component {
         this.refresh();
     }
 
-    handleLabelUpdate(uid, label) {
+    handleLabelUpdate(utterance, label) {
         console.log("updated utterance labels: " + label.target.value);
-        let utterances = {...this.state.utterances};
-        utterances[uid].label = label.target.value;
+        let utterances = [...this.state.utterances];
+        utterances[utterance.index].label = label.target.value;
         this.setState({utterances: utterances});
     }
 
-    keyPress(uid, e){
+    keyPress(utterance, e){
         if(e.keyCode === 13){
            console.log('value', e.target.value);
            fetch(process.env.REACT_APP_API_URL + '/peoples_speech/set_labels',
@@ -73,8 +76,8 @@ export default class TranscriptionTool extends React.Component {
                    },
                    body: JSON.stringify({
                        view : {},
-                       images : [ {selected: true, uid: uid} ],
-                       label : this.state.utterances[uid].label}) // body data type must match "Content-Type" header
+                       images : [ {selected: true, uid: utterance.uid} ],
+                       label : utterance.label})
                }
            )
            .then(res => res.json())
@@ -85,7 +88,11 @@ export default class TranscriptionTool extends React.Component {
         }
     }
 
-    autoLabel(uid) {
+    autoLabel() {
+        if (this.state.utterances.length === 0) {
+            return;
+        }
+
         fetch(process.env.REACT_APP_API_URL + '/peoples_speech/auto_label',
             {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -96,8 +103,8 @@ export default class TranscriptionTool extends React.Component {
                 },
                 body: JSON.stringify({
                     view : {},
-                    images : [ {selected: true, uid: uid} ],
-                    label : this.state.utterances[uid].label}) // body data type must match "Content-Type" header
+                    images : [ {selected: true, uid: this.props.uid} ],
+                    label : this.state.utterances[0].label})
             }
         )
         .then(res => res.json())
@@ -108,8 +115,12 @@ export default class TranscriptionTool extends React.Component {
 
     }
 
-    autoSplit(uid) {
-        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/auto_split',
+    autoSegment() {
+        if (this.state.utterances.length === 0) {
+            return;
+        }
+
+        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/auto_segment',
             {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -119,8 +130,8 @@ export default class TranscriptionTool extends React.Component {
                 },
                 body: JSON.stringify({
                     view : {},
-                    images : [ {selected: true, uid: uid} ],
-                    label : this.state.utterances[uid].label}) // body data type must match "Content-Type" header
+                    images : [ {selected: true, uid: this.props.uid} ],
+                    label : this.state.utterances[0].label})
             }
         )
         .then(res => res.json())
@@ -132,48 +143,65 @@ export default class TranscriptionTool extends React.Component {
 
     render() {
         return <div>
+                <Grid container justifyContent = "center">
+                    <Box m={1}>
+                        <Button id="auto-label" variant="contained" onClick={() =>
+                            {
+                                console.log("Autolabeling: " + this.props.uid);
+                                this.autoLabel();
+                            }}>
+                            AutoLabel
+                        </Button>
+                    </Box>
+                    <Box m={1}>
+                        <Button id="auto-split" variant="contained" onClick={() =>
+                            {
+                                console.log("Autosegmenting: " + this.props.uid);
+                                this.autoSegment();
+                            }}>
+                            AutoSplit
+                        </Button>
+                    </Box>
+                </Grid>
+            <Box m={1}>
+                <Grid container spacing={2} columns={12} sx={{ minWidth: 700 }}>
+                    {this.state.utterances.map((utterance) => (
+                        <>
+                        <Grid item xs={11}>
+                            <Item>
+                                <TextField id={"label-" + utterance.index} label={utterance.speaker}
+                                    variant="outlined" value={utterance.label}
+                                    multiline
+                                    rows={1}
+                                    rowsMax={Infinity}
+                                    style = {{width: "95%"}}
+                                    onKeyDown={(e) => {
+                                        this.keyPress(utterance, e);
+                                    }}
+                                    onChange = {(label) => {
+                                        this.handleLabelUpdate(utterance, label);
+                                    }} />
 
-                <Grid container spacing={2} columns={12} sx={{ minWidth: 800 }}>
-                  {Object.keys(this.state.utterances).map((uid, index) => (
-                    <>
-                    <Grid item xs={8}>
-                        <Item>
-                            <TextField id={uid} label={this.state.utterances[uid].speaker}
-                                variant="outlined" value={this.state.utterances[uid].label}
-                                style = {{width: "95%"}}
-                                onKeyDown={(e) => {
-                                    this.keyPress(uid, e);
-                                }}
-                                onChange = {(label) => {
-                                    this.handleLabelUpdate(uid, label);
-                                }} />
-
-                        </Item>
-                    </Grid>
-                    <Grid item xs={2}>
-
-                          <Button id="auto-label" variant="contained" onClick={() =>
-                              {
-                                  console.log("Autolabeling: " + uid);
-                                  this.autoLabel(uid);
-                              }}>
-                              AutoLabel
-                          </Button>
-                          <Button id="auto-split" variant="contained" onClick={() =>
-                              {
-                                  console.log("Autosplitting: " + uid);
-                                  this.autoSplit(uid);
-                              }}>
-                              AutoSplit
-                          </Button>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <AudioButton url={this.state.utterances[uid].audio} />
-                    </Grid>
-                    </>
-                ))}
-              </Grid>
-            </div>;
+                            </Item>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <AudioButton url={utterance.audio} />
+                        </Grid>
+                        </>
+                    ))}
+                </Grid>
+            </Box>
+            <Box m={1}>
+                <Grid container justifyContent = "center" p={1}>
+                    <Button id="make-data" variant="contained" onClick={() =>
+                        {
+                            console.log("Making data elements: " + this.props.uid);
+                        }}>
+                        Make Data
+                    </Button>
+                </Grid>
+            </Box>
+        </div>;
     }
 }
 
