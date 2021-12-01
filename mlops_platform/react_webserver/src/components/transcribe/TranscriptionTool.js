@@ -164,16 +164,15 @@ export default class TranscriptionTool extends React.Component {
                     </Box>
                 </Grid>
             <Box m={1}>
-                <Grid container spacing={2} columns={12} sx={{ minWidth: 700 }}>
+                <Grid container spacing={2} columns={12} sx={{ minWidth: 700, maxWidth: 800 }}>
                     {this.state.utterances.map((utterance) => (
                         <>
                         <Grid item xs={11}>
                             <Item>
-                                <TextField id={"label-" + utterance.index} label={utterance.speaker}
+                                <TextField key={"label-" + utterance.index} id={"label-" + utterance.index} label={utterance.speaker}
                                     variant="outlined" value={utterance.label}
                                     multiline
-                                    rows={1}
-                                    rowsMax={Infinity}
+                                    maxRows={Infinity}
                                     style = {{width: "95%"}}
                                     onKeyDown={(e) => {
                                         this.keyPress(utterance, e);
@@ -185,7 +184,10 @@ export default class TranscriptionTool extends React.Component {
                             </Item>
                         </Grid>
                         <Grid item xs={1}>
-                            <AudioButton url={utterance.audio} />
+                            <AudioButton
+                                url={utterance.audio}
+                                startTime={utterance.audio_info.start / 1000.0}
+                                endTime={utterance.audio_info.end / 1000.0} />
                         </Grid>
                         </>
                     ))}
@@ -197,7 +199,7 @@ export default class TranscriptionTool extends React.Component {
                         {
                             console.log("Making data elements: " + this.props.uid);
                         }}>
-                        Make Data
+                        Submit Transcripts
                     </Button>
                 </Grid>
             </Box>

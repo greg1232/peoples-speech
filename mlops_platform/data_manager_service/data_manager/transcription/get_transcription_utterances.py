@@ -22,6 +22,7 @@ def get_transcription_utterances(uid):
 
     utterances[0]["speaker"] = "Speaker 1"
     utterances[0]["audio"] = get_url(utterances[0]["audio_path"], config["support"]["get_url"]["expiration"])
+    utterances[0]["audio_info"] = { "start" : 0, "end" : 0 }
 
     if "label_path" in utterances[0]:
         with open(utterances[0]["label_path"]) as label_file:
@@ -32,13 +33,13 @@ def get_transcription_utterances(uid):
                     segmented_utterance = utterances[0].copy()
                     segmented_utterance["label"] = utterance["label"]
                     segmented_utterance["speaker"] = utterance["speaker"]
+                    segmented_utterance["audio_info"] = utterance["audio"]
                     segmented_utterances.append(segmented_utterance)
             else:
                 segmented_utterances.append(utterances[0])
 
     else:
         utterances[0]["label"] = ""
-        utterances[0]["speaker"] = "Speaker 1"
         segmented_utterances.append(utterances[0])
 
     return segmented_utterances

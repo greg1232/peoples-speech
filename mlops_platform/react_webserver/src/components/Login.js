@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Grid, TextField } from '@material-ui/core';
 
-import logo from "./logos/mountain.jpeg";
+import logo from "./logos/wave.jpeg";
 
 import GoogleSingleSignOn from "./login/GoogleSingleSignOn"
 

@@ -32,7 +32,7 @@ export default function Header(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            The Peoples Speech Platform
+            DataWav
           </Typography>
           <Logout setToken={props.setToken} />
         </Toolbar>

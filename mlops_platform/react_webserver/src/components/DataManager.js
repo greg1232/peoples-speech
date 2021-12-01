@@ -44,7 +44,7 @@ export default function DataManager(props) {
   });
 
   return (
-    <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 700 }}>
+    <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>
       <Tabs orientation="vertical" value={value} onChange={handleChange} aria-label="data-manager-tabs" sx={{ borderRight: 1, borderColor: 'divider' }} >
         <Tab label="Dataset" {...a11yProps(0)} />
         <Tab label="Jobs" {...a11yProps(1)} />
@@ -72,6 +72,7 @@ function TabPanel(props) {
       role="tabpanel"
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
+      overflow="auto"
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
