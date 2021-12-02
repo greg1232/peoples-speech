@@ -116,6 +116,7 @@ def get_segments(frames, config):
     """
     padding_duration_ms = config["alignment"]["vad"]["padding_duration_ms"]
     frame_duration_ms = config["alignment"]["vad"]["frame_duration_ms"]
+    voiced_frame_ratio =  config["alignment"]["vad"]["voiced_frame_ratio"]
 
     num_padding_frames = int(padding_duration_ms / frame_duration_ms)
     # We use a deque for our sliding window/ring buffer.
@@ -139,10 +140,10 @@ def get_segments(frames, config):
         if not triggered:
             ring_buffer.append((frame, is_speech))
             num_voiced = len([f for f, speech in ring_buffer if speech])
-            # If we're NOTTRIGGERED and more than 90% of the frames in
+            # If we're NOTTRIGGERED and more than X% of the frames in
             # the ring buffer are voiced frames, then enter the
             # TRIGGERED state.
-            if num_voiced > 0.9 * ring_buffer.maxlen:
+            if num_voiced > voiced_frame_ratio * ring_buffer.maxlen:
                 triggered = True
                 log_message += ('+(%s)' % (ring_buffer[0][0].start,))
                 # We want to yield all the audio we see from now until
@@ -157,10 +158,10 @@ def get_segments(frames, config):
             voiced_frames.append(frame)
             ring_buffer.append((frame, is_speech))
             num_unvoiced = len([f for f, speech in ring_buffer if not speech])
-            # If more than 90% of the frames in the ring buffer are
+            # If more than X% of the frames in the ring buffer are
             # unvoiced, then enter NOTTRIGGERED and yield whatever
             # audio we've collected.
-            if num_unvoiced > 0.9 * ring_buffer.maxlen:
+            if num_unvoiced > voiced_frame_ratio * ring_buffer.maxlen:
                 log_message += ('-(%s)' % (frame.end))
                 logger.debug(log_message)
                 log_message=""

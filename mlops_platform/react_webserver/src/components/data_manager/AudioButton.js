@@ -47,14 +47,13 @@ export default class AudioButton extends React.Component {
         return (
         <div>
             <Button variant="contained" onClick={this.togglePlay}> {this.state.play ? 'Pause' : 'Play'} </Button>
-            {Math.floor(this.props.startTime)} / {Math.floor(this.state.currentTime)} / {Math.floor(this.props.endTime)}
+            {Math.floor(this.state.currentTime)}
         </div>
         );
     }
 }
 
 AudioButton.defaultProps = {
-    startTime : 0.0,
-    endTime : 0.0
+    startTime : 0.0
 };
 

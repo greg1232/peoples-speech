@@ -27,7 +27,8 @@ transcription:
 alignment:
     vad:
         frame_duration_ms: 30
-        padding_duration_ms: 100
+        padding_duration_ms: 120
+        voiced_frame_ratio: 0.9
 
 deploy:
     device_table_name: "devices"

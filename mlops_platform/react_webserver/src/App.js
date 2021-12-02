@@ -21,7 +21,7 @@ class App extends React.Component {
     }
 
     componentDidMount(){
-      document.title = "SayData"
+      document.title = "DataWav"
     }
 
     render() {

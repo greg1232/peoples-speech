@@ -25,22 +25,24 @@ export default function DataManager(props) {
   };
 
   React.useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + '/peoples_speech/get_transcription_tasks',
-        {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            headers: {
-              'Content-Type': 'application/json'
+    if (uid === 0) {
+        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/get_transcription_tasks',
+            {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                headers: {
+                  'Content-Type': 'application/json'
+                }
             }
-        }
-    )
-    .then(res => res.json())
-    .then((data) => {
-        if(data["tasks"].length > 0) {
-            setUid(data["tasks"][0].uid);
-        }
-    })
-    .catch(console.log)
+        )
+        .then(res => res.json())
+        .then((data) => {
+            if(data["tasks"].length > 0) {
+                setUid(data["tasks"][0].uid);
+            }
+        })
+        .catch(console.log)
+    }
   });
 
   return (

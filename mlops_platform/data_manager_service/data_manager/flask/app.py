@@ -98,6 +98,12 @@ def auto_segment():
     data_manager.auto_segment(request.json["view"], request.json["images"])
     return { "status" : "ok"}
 
+@app.route('/peoples_speech/submit_transcripts', methods=['GET', 'POST'])
+def submit_transcripts():
+    logger.debug("Committing transcription: " + str(request.json))
+    data_manager.submit_transcripts(request.json["utterances"])
+    return { "status" : "ok"}
+
 ###
 ## Model Iteration
 ###

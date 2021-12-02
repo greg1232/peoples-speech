@@ -15,6 +15,7 @@ from data_manager.transcription.get_transcription_utterances import get_transcri
 from data_manager.transcription.make_transcription_task import make_transcription_task
 from data_manager.transcription.auto_label import auto_label
 from data_manager.transcription.auto_segment import auto_segment
+from data_manager.transcription.submit_transcripts import submit_transcripts
 
 from data_manager.trainer.get_training_jobs import get_training_jobs
 from data_manager.trainer.get_exported_datasets import get_exported_datasets

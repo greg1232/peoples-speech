@@ -16,7 +16,6 @@ export default class Logout extends React.Component {
     onSuccess() {
         this.props.setToken(null);
         console.log('Logout success Success');
-        alert('Logout successful.');
     }
 
     render() {
@@ -26,6 +25,7 @@ export default class Logout extends React.Component {
                 <GoogleLogout
                     clientId={clientId}
                     buttonText="Logout"
+                    icon={false}
                     onLogoutSuccess={this.onSuccess}
                 >
                 </GoogleLogout>
