@@ -8,6 +8,7 @@ env:
 phases:
   pre_build:
     commands:
+      - echo Logging in to Docker hub...
       - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASS
   build:
     commands:
