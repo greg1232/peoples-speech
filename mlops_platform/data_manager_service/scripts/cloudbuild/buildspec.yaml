@@ -8,10 +8,7 @@ env:
 phases:
   pre_build:
     commands:
-      - echo Logging into Docker hub...
       - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASS
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - $(aws ecr get-login --no-include-email --region us-east-1)
   build:
     commands:
@@ -22,5 +19,8 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - $(aws ecr get-login --no-include-email --region us-east-1)
       - echo Pushing the Docker image...
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
