@@ -1,4 +1,7 @@
 
+
+from data_manager.support.does_file_exist import does_file_exist
+
 from smart_open import open
 
 import os
@@ -15,7 +18,7 @@ def make_image(entry):
 
     entry["image_path"] = image_path
 
-    if exists(image_path):
+    if does_file_exist(image_path):
         logger.debug("Image exists: " + image_path + " ...")
         return
 
@@ -34,11 +37,4 @@ def make_image(entry):
         plt.savefig(image_file)
         plt.clf()
 
-def exists(path):
-    try:
-        with open(path, "rb") as audio_file:
-            return True
-
-    except:
-        return False
 

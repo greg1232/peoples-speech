@@ -1,1 +1,1 @@
-docker run --rm -it -v $HOME/.aws:/root/.aws:ro --entrypoint /app/data_manager/scripts/start-tests.sh data-manager-service:latest
+docker run --rm -it -v $HOME/.aws:/root/.aws:ro --entrypoint /app/data_manager/scripts/start-tests.sh data-manager-service:latest $@

@@ -15,9 +15,10 @@ def get_upload_url_for_file(file):
 
     path = os.path.join(config["data_manager"]["upload"]["path"], file["path"])
 
+    logger.debug("Getting put url for path: " + str(path))
+
     url = get_put_url(path, config["support"]["get_url"]["expiration"])
 
-    logger.debug("Getting put url for path: " + str(path))
     logger.debug(" url: " + str(url))
 
     return url, path

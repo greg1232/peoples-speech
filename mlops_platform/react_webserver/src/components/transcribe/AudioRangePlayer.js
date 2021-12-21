@@ -12,7 +12,7 @@ export default class AudioRangePlayer extends React.Component {
             startTime : this.props.startTime,
             currentTime: this.props.startTime,
             endTime : this.props.endTime,
-            startTimeLimit : this.props.startTime - 5,
+            startTimeLimit : Math.max(this.props.startTime - 5, 0),
             endTimeLimit : this.props.endTime + 5
         }
 
@@ -72,7 +72,7 @@ export default class AudioRangePlayer extends React.Component {
         }
         if (newValue[1] === this.state.startTimeLimit) {
             this.setState({
-                startTimeLimit : this.state.startTimeLimit - 5
+                startTimeLimit : Math.max(this.state.startTimeLimit - 5, 0)
             });
         }
     }
@@ -88,7 +88,7 @@ export default class AudioRangePlayer extends React.Component {
             startTime : this.props.startTime,
             currentTime: this.props.startTime,
             endTime : this.props.endTime,
-            startTimeLimit : this.props.startTime - 5,
+            startTimeLimit : Math.max(this.props.startTime - 5, 0),
             endTimeLimit : this.props.endTime + 5
         });
     }
@@ -101,6 +101,8 @@ export default class AudioRangePlayer extends React.Component {
                 <Button variant="contained" onClick={this.togglePlay}> {this.state.play ? 'Pause' : 'Play'} </Button>
                 {round2(this.state.currentTime)}
                 <Slider
+                    size="small"
+                    step={0.25}
                     getAriaLabel={() => 'Time range'}
                     value={[this.state.startTime, this.state.endTime]}
                     onChange={this.handleSliderChange}

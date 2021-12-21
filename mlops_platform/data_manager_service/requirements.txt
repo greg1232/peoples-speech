@@ -10,3 +10,4 @@ docker
 pyyaml
 pydub
 webrtcvad
+srt

@@ -27,11 +27,11 @@ function parse_yaml {
    }'
 }
 
-eval $(parse_yaml $LOCAL_DIRECTORY/../deploy/configs/peoples_speech.yaml "")
+eval $(parse_yaml $LOCAL_DIRECTORY/../data_manager/configs/peoples_speech.yaml "")
 
 export AWS_REGION
 
 # Start the dev environment
-PYTHONPATH=$LOCAL_DIRECTORY/.. python3 $LOCAL_DIRECTORY/../data_manager/transcription/test/test_auto_segment.py
+PYTHONPATH=$LOCAL_DIRECTORY/.. python3 -m unittest $@
 
 

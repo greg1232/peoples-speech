@@ -21,6 +21,6 @@ def make_transcription_task(view, images):
         result["start_time"] = time.time()
         result["end_time"] = time.time()
         result["completion_percent"] = 0.0
-        if not database.contains({"audio_path" : result["audio_path"]}):
+        if not database.contains({"uid" : result["uid"]}):
             database.insert(result)
 
