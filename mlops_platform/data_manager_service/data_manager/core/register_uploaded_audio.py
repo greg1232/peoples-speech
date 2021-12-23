@@ -9,6 +9,9 @@ from data_manager.support.database import Database
 from data_manager.support.does_file_exist import does_file_exist
 from data_manager.core.util.make_entry import make_entry
 from data_manager.core.util.is_audio_file import is_audio_file
+from data_manager.core.util.set_label import set_label
+
+from smart_open import open
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +33,7 @@ def register_uploaded_audio(audio_path):
             update_utterances(audio_path, subtitle_path, database)
     else:
         subtitle_path = audio_path
-        update_subtitle(subtitle_path, database)
+        entry = update_subtitle(subtitle_path, database)
 
     return entry
 
@@ -54,13 +57,14 @@ def update_utterances(audio_path, subtitle_path, database):
             utterances.append({
                 "speaker" : "Speaker 1",
                 "label" : utterance.content,
-                "audio_info" : { "start" : start, "end" : end }
+                "audio" : { "start" : start, "end" : end }
             })
 
     label = {
-        "utterances" : utterances,
+        "label" : "",
+        "utterances" : utterances
     }
 
-    set_label(database, {"audio_path" : audio_path}, label, config)
+    set_label(database, {"audio_path" : audio_path}, label)
 
 

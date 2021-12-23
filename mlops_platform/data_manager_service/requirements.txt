@@ -11,3 +11,5 @@ pyyaml
 pydub
 webrtcvad
 srt
+gruut
+git+git://github.com/greg1232/align-speech@a4ba01f

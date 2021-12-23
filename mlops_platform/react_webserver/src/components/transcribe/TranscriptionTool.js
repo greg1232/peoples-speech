@@ -216,7 +216,12 @@ export default class TranscriptionTool extends React.Component {
                     </Box>
                     <Box m={1}>
                         <Button id="submit-transcripts" variant="contained" onClick={this.submitTranscripts} >
-                            Submit Transcripts
+                            Split Into Clips
+                        </Button>
+                    </Box>
+                    <Box m={1}>
+                        <Button id="submit-transcripts" variant="contained" onClick={this.submitTranscripts} >
+                            Submit Transcript
                         </Button>
                     </Box>
                 </Grid>

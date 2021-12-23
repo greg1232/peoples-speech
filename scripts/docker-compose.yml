@@ -16,8 +16,8 @@ services:
 
     volumes:
       - type: bind
-        source: ${HOME}/.aws/credentials
-        target: /root/.aws/credentials
+        source: ${HOME}/.aws
+        target: /root/.aws
         read_only: true
     networks:
       - my-bridge

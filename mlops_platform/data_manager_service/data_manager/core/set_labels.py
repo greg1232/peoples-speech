@@ -24,6 +24,6 @@ def set_labels(view, images, label):
     logger.debug("Got database results: " + str(results))
 
     for result in results:
-        set_label(database, result, label, config)
+        set_label(database, result, label)
 
 

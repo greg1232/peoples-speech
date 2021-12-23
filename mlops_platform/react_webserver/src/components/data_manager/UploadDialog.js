@@ -214,7 +214,7 @@ class DropzoneUploadBox extends React.Component {
                 {({getRootProps, getInputProps}) => (
                     <section className="container">
                         <Paper variant="outlined">
-                            <div {...getRootProps({className: 'dropzone'})}>
+                            <div {...getRootProps({className: 'dropzone'})} style={{ width: 400, height: 200 }}>
                                 <input {...getInputProps()} />
                                 <p>Drag 'n' drop some files here, or click to select files</p>
                             </div>

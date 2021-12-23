@@ -30,7 +30,7 @@ def submit_transcripts(utterances):
 
 def extract_audio_segment(utterance):
     start = utterance["audio_info"]["start"]
-    end   = utterance["audio_info"]["end"] + 500
+    end   = utterance["audio_info"]["end"]
 
     filename, extension = os.path.splitext(os.path.basename(utterance["audio_path"]))
 

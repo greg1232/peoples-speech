@@ -61,8 +61,8 @@ def get_upload_url_for_file():
 @app.route('/peoples_speech/register_uploaded_audio', methods=['GET', 'POST'])
 def register_uploaded_audio():
     logger.debug("Getting upload url of file: " + str(request.json))
-    entry = data_manager.register_uploaded_audio(request.json["path"])
-    return entry
+    data_manager.register_uploaded_audio(request.json["path"])
+    return { "status" : "ok"}
 
 ###
 ## Transcription

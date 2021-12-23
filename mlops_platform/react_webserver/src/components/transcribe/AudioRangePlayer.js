@@ -48,9 +48,10 @@ export default class AudioRangePlayer extends React.Component {
 
     timeUpdate() {
         this.setState({ currentTime: this.audio.currentTime });
-        if (this.audio.currentTime > this.state.endTime) {
-            this.audio.currentTime = this.state.endTime;
-            this.togglePlay();
+        if (this.state.play) {
+            if (this.audio.currentTime > this.state.endTime) {
+                this.togglePlay();
+            }
         }
     }
 

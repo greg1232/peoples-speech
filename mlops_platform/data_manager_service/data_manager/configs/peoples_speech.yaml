@@ -30,6 +30,12 @@ alignment:
         padding_duration_ms: 120
         voiced_frame_ratio: 0.9
 
+align:
+    minimum_confidence: 0.0
+
+segment:
+    type : "forced-alignment"
+
 deploy:
     device_table_name: "devices"
     metrics_table_name: "metrics"
@@ -69,7 +75,7 @@ model_iteration:
             path: "s3://peoples-speech/datasets/prestamo/955c16269fbd3fe2553e203e56a0b8c6.jsonlines"
 
 account:
-    whitelist: ["gregory.diamos@gmail.com", "ryan@aifund.ai"]
+    whitelist: ["gregory.diamos@gmail.com"]
 
 credentials:
     path: "/home/ubuntu/.aws/credentials"

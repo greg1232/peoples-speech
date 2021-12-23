@@ -37,6 +37,22 @@ def config_path():
 
     return os.path.join(os.path.dirname(os.path.dirname(__file__)), "configs", "peoples_speech.yaml")
 
+def config_to_dict(config):
+    dictionary = {}
+
+    for key, value in config.as_dict().items():
+        scope = dictionary
+        components = key.split(".")
+
+        for component in components[:-1]:
+            if not component in scope:
+                scope[component] = {}
+            scope = scope[component]
+
+        scope[components[-1]] = value
+
+    return dictionary
+
 def setup_logging(arguments):
 
     logging_format = "%(asctime)s - %(levelname)s - %(name)s - %(message)s"

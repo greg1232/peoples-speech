@@ -6,7 +6,7 @@ from smart_open import open
 
 logger = logging.getLogger(__name__)
 
-def set_label(database, entry, label, config):
+def set_label(database, entry, label):
     label_hash = get_label_hash(label)
 
     current_entry = get_current_entry(database, entry)
@@ -14,6 +14,7 @@ def set_label(database, entry, label, config):
     updated_entry = update_entry(current_entry, label, label_hash)
 
     logger.debug("Updating entry: " + str(updated_entry))
+    logger.debug("With label: " + str(label))
 
     database.update(updated_entry, key=("uid", updated_entry["uid"]))
 
@@ -33,7 +34,7 @@ def get_current_entry(database, entry):
         # allow search by audio if not
         query["audio_path"] = entry["audio_path"]
 
-    results = database.search({"query" : entry})
+    results = database.search({"query" : query})
 
     assert len(results) > 0
 
@@ -45,10 +46,15 @@ def get_current_entry(database, entry):
         if not result["labeled"]:
             return result
 
+    logger.debug("Entry: " + str(entry))
+    logger.debug("Query: " + str(query))
+    logger.debug("Found results: " + str(results))
+
     assert False, "Could not find unlabeled audio to apply label to"
 
 def update_entry(entry, label, label_hash):
-    label_path_base = os.path.join(os.path.dirname(os.path.dirname(entry["audio_path"])), "new_labels")
+    label_path_base = os.path.join(os.path.dirname(os.path.dirname(
+        entry["audio_path"])), "new_labels")
 
     label_path = os.path.join(label_path_base, label_hash + ".json")
     logger.debug("Writing label to: " + str(label_path))
