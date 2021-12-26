@@ -88,7 +88,7 @@ function timestampToString(timestamp) {
     if (isNaN(timestamp)) {
         return timestamp;
     }
-    var date = new Date(timestamp);
+    var date = new Date(timestamp * 1000.0);
     return date.toLocaleTimeString("en-US");
 }
 

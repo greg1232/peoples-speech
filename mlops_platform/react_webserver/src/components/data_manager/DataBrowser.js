@@ -1,11 +1,12 @@
 
 import React from 'react';
-import { Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox, Button, Box, ImageListItemBar, IconButton } from '@material-ui/core';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
+import { Grid, ImageList, ImageListItem, FormControlLabel, FormGroup, Checkbox,
+         Button, Box, ImageListItemBar } from '@material-ui/core';
 import UploadDialog from './UploadDialog'
 import LabelDialog from './LabelDialog'
 import ExportDialog from './ExportDialog'
 import AudioButton from './AudioButton'
+import EditMenu from './EditMenu'
 
 export default class DataBrowser extends React.Component {
     constructor(props){
@@ -251,12 +252,7 @@ export default class DataBrowser extends React.Component {
                                 title={getTrainTestString(item)}
                                 position="top"
                                 actionIcon={
-                                    <IconButton
-                                        sx={{ color: 'white' }}
-                                              aria-label={`star ${getTrainTestString(item)}`}
-                                    >
-                                        <StarBorderIcon />
-                                    </IconButton>
+                                    <EditMenu uid={item.uid} />
                                 }
                                 actionPosition="left"
                             />

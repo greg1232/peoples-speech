@@ -17,6 +17,7 @@ def make_entry(database, entry):
 
     entry["train"] = False
     entry["test"] = False
+    entry["duration_ms"] = get_duration_ms(entry["audio_path"])
     entry["uid"] = get_uid(entry["audio_path"])
     if "label_path" in entry:
         entry["labeled"] = len(entry["label_path"]) > 0
@@ -55,5 +56,10 @@ def convert_audio(entry):
             new_file.write(temp_file.read())
 
     entry["audio_path"] = new_path
+
+def get_duration_ms(audio_path):
+    with open(audio_path, "rb") as audio_file:
+        audio = AudioSegment.from_file(audio_file, format="flac")
+        return len(audio)
 
 

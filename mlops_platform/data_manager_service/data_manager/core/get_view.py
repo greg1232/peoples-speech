@@ -8,7 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 def get_view(view):
-    '''Selects appropriate images from the database.'''
+    '''Selects appropriate audios from the database.'''
 
     config = get_config()
 

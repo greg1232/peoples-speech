@@ -42,7 +42,7 @@ def update_subtitle(subtitle_path, database):
 
     audio_path = os.path.splitext(subtitle_path)[0] + ".flac"
 
-    if not does_file_exist(audio_path):
+    if not does_file_exist_in_database(database, audio_path):
         return
 
     update_utterances(audio_path, subtitle_path, database)
@@ -55,9 +55,10 @@ def update_utterances(audio_path, subtitle_path, database):
             start = int(utterance.start.total_seconds() * 1000)
             end   = int(utterance.end.total_seconds() * 1000)
             utterances.append({
+                "confidence" : 0.0,
                 "speaker" : "Speaker 1",
                 "label" : utterance.content,
-                "audio" : { "start" : start, "end" : end }
+                "audio_info" : { "start" : start, "end" : end }
             })
 
     label = {
@@ -66,5 +67,8 @@ def update_utterances(audio_path, subtitle_path, database):
     }
 
     set_label(database, {"audio_path" : audio_path}, label)
+
+def does_file_exist_in_database(database, audio_path):
+    return database.contains({"audio_path" : "audio_path"})
 
 

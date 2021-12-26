@@ -12,8 +12,8 @@ export default class AudioRangePlayer extends React.Component {
             startTime : this.props.startTime,
             currentTime: this.props.startTime,
             endTime : this.props.endTime,
-            startTimeLimit : Math.max(this.props.startTime - 5, 0),
-            endTimeLimit : this.props.endTime + 5
+            startTimeLimit : padStart(this.props.startTime, this.props.endTime),
+            endTimeLimit : padEnd(this.props.startTime, this.props.endTime, this.props.duration)
         }
 
         this.audio = new Audio(this.props.url);
@@ -26,12 +26,10 @@ export default class AudioRangePlayer extends React.Component {
 
     componentDidMount() {
         this.audio.addEventListener('ended', () => this.setState({ play: false }));
-        this.audio.addEventListener('timeupdate', this.timeUpdate);
     }
 
     componentWillUnmount() {
         this.audio.removeEventListener('ended', () => this.setState({ play: false }));
-        this.audio.removeEventListener('timeupdate', this.timeUpdate);
     }
 
     togglePlay = () => {
@@ -39,6 +37,7 @@ export default class AudioRangePlayer extends React.Component {
             if (this.state.play) {
                 this.audio.currentTime = this.state.startTime
                 this.audio.play();
+                this.timeUpdate();
             }
             else {
                 this.audio.pause();
@@ -51,6 +50,8 @@ export default class AudioRangePlayer extends React.Component {
         if (this.state.play) {
             if (this.audio.currentTime > this.state.endTime) {
                 this.togglePlay();
+            } else {
+                window.requestAnimationFrame(this.timeUpdate);
             }
         }
     }
@@ -68,12 +69,12 @@ export default class AudioRangePlayer extends React.Component {
     handleSliderClick(event, newValue) {
         if (newValue[1] === this.state.endTimeLimit) {
             this.setState({
-                endTimeLimit : this.state.endTimeLimit + 5
+                endTimeLimit : padEnd(this.state.startTimeLimit, this.state.endTimeLimit, this.props.duration)
             });
         }
         if (newValue[1] === this.state.startTimeLimit) {
             this.setState({
-                startTimeLimit : Math.max(this.state.startTimeLimit - 5, 0)
+                startTimeLimit : padStart(this.state.startTimeLimit, this.state.endTimeLimit)
             });
         }
     }
@@ -89,8 +90,8 @@ export default class AudioRangePlayer extends React.Component {
             startTime : this.props.startTime,
             currentTime: this.props.startTime,
             endTime : this.props.endTime,
-            startTimeLimit : Math.max(this.props.startTime - 5, 0),
-            endTimeLimit : this.props.endTime + 5
+            startTimeLimit : padStart(this.props.startTime, this.props.endTime),
+            endTimeLimit : padEnd(this.props.startTime, this.props.endTime, this.props.duration)
         });
     }
 
@@ -131,5 +132,17 @@ function valuetext(value) {
 
 function round2(num) {
     return (Math.round(num * 100) / 100).toFixed(2);
+}
+
+function padStart(startTime, endTime) {
+    let padding = Math.max(1, (0.2 * (endTime - startTime)).toFixed());
+
+    return Math.max(startTime - padding, 0);
+}
+
+function padEnd(startTime, endTime, duration) {
+    let padding = Math.max(1, (0.2 * (endTime - startTime)).toFixed());
+
+    return Math.min(endTime + padding, duration);
 }
 

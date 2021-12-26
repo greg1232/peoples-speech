@@ -61,6 +61,7 @@ def align_labels_to_segments(segments, result):
         start = index * label_step
         end = min((index + 1) * label_step, len(result["label"]))
         utterances.append({
+            "confidence" : 0.0,
             "audio" : { "start" : segment[0].start, "end": segment[-1].end },
             "label" : result["label"][start:end],
             "speaker" : "Speaker 1"

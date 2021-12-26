@@ -23,19 +23,20 @@ export default class TranscriptionTool extends React.Component {
         this.setStartTime= this.setStartTime.bind(this);
         this.setEndTime= this.setEndTime.bind(this);
         this.clearEmpty = this.clearEmpty.bind(this);
-        this.submitTranscripts = this.submitTranscripts.bind(this);
+        this.saveTranscripts = this.saveTranscripts.bind(this);
+        this.splitIntoClips = this.splitIntoClips.bind(this);
         this.refresh = this.refresh.bind(this);
         this.autoLabel = this.autoLabel.bind(this);
         this.autoSegment = this.autoSegment.bind(this);
     }
 
     handleUtteranceUpdate(response) {
-        console.log("updated utterances: " + response);
 
         for (const [index, utterance] of response["utterances"].entries()) {
             utterance.index = index;
             utterance.sequence = 0;
         }
+        console.log("updated utterances: ", response);
 
         this.setState({utterances: response["utterances"]});
     }
@@ -85,8 +86,8 @@ export default class TranscriptionTool extends React.Component {
                 },
                 body: JSON.stringify({
                     view : {},
-                    images : [ {selected: true, uid: this.state.utterances[0].uid} ],
-                    label : this.state.utterances[0].label})
+                    images : [ {selected: true, uid: this.props.uid} ],
+                    label : this.state.utterances[0].utterance_info.label})
             }
         )
         .then(res => res.json())
@@ -112,8 +113,8 @@ export default class TranscriptionTool extends React.Component {
                 },
                 body: JSON.stringify({
                     view : {},
-                    images : [ {selected: true, uid: this.state.utterances[0].uid} ],
-                    label : this.state.utterances[0].label})
+                    images : [ {selected: true, uid: this.props.uid} ],
+                    label : this.state.utterances[0].utterance_info.label})
             }
         )
         .then(res => res.json())
@@ -125,18 +126,18 @@ export default class TranscriptionTool extends React.Component {
 
     setStartTime(utterance, startTime) {
         let utterances = [...this.state.utterances];
-        utterances[utterance.index].audio_info.start = startTime * 1000.0;
+        utterances[utterance.index].utterance_info.audio_info.start = startTime * 1000.0;
         this.setState({utterances: utterances});
     }
 
     setEndTime(utterance, endTime) {
         let utterances = [...this.state.utterances];
-        utterances[utterance.index].audio_info.end = endTime * 1000.0;
+        utterances[utterance.index].utterance_info.audio_info.end = endTime * 1000.0;
         this.setState({utterances: utterances});
     }
 
     clearEmpty() {
-        let filtered = this.state.utterances.filter(utterance => utterance.label.length > 0);
+        let filtered = this.state.utterances.filter(utterance => utterance.utterance_info.label.length > 0);
         for (const [index, utterance] of filtered.entries()) {
             utterance.index = index;
             utterance.sequence++;
@@ -144,7 +145,30 @@ export default class TranscriptionTool extends React.Component {
         this.setState({utterances: filtered});
     }
 
-    submitTranscripts() {
+
+    saveTranscripts() {
+        let utterances = this.state.utterances.map((utterance) => (utterance.utterance_info));
+        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/set_labels',
+            {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                headers: {
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({
+                    view : {},
+                    images : [{ selected: true, uid: this.props.uid }],
+                    label : { label: "", utterances: utterances }}) // body data type must match "Content-Type" header
+            }
+        )
+        .then(res => res.json())
+        .then((data) => {
+            console.log("Got response: ", data);
+        }).catch(console.log)
+    }
+
+    splitIntoClips() {
         fetch(process.env.REACT_APP_API_URL + '/peoples_speech/submit_transcripts',
             {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -172,7 +196,7 @@ export default class TranscriptionTool extends React.Component {
                 </Box>
                 <Box m={1}>
                     <Button id="auto-split" variant="contained" onClick={this.autoSegment}>
-                        AutoSplit
+                        Fix Timestamps
                     </Button>
                 </Box>
             </Grid>
@@ -182,8 +206,8 @@ export default class TranscriptionTool extends React.Component {
                         <>
                         <Grid item xs={10}>
                             <Item>
-                                <TextField key={"label-" + utterance.index} id={"label-" + utterance.index} label={utterance.speaker}
-                                    variant="outlined" value={utterance.label}
+                                <TextField key={"label-" + utterance.index} id={"label-" + utterance.index} label={utterance.utterance_info.speaker}
+                                    variant="outlined" value={utterance.utterance_info.label}
                                     multiline
                                     maxRows={Infinity}
                                     style = {{width: "95%"}}
@@ -195,10 +219,11 @@ export default class TranscriptionTool extends React.Component {
                         </Grid>
                         <Grid item xs={2}>
                             <AudioRangePlayer
-                                url={utterance.audio}
+                                url={utterance.audio_info.audio}
                                 sequence={utterance.sequence}
-                                startTime={utterance.audio_info.start / 1000.0}
-                                endTime={utterance.audio_info.end / 1000.0}
+                                duration={utterance.audio_info.duration_ms / 1000.0}
+                                startTime={utterance.utterance_info.audio_info.start / 1000.0}
+                                endTime={utterance.utterance_info.audio_info.end / 1000.0}
                                 setStartTime={(startTime) => { this.setStartTime(utterance, startTime); }}
                                 setEndTime={(endTime) => { this.setEndTime(utterance, endTime); }}
                              />
@@ -210,18 +235,18 @@ export default class TranscriptionTool extends React.Component {
             <Box m={1}>
                 <Grid container justifyContent = "center" p={1}>
                     <Box m={1}>
-                        <Button id="submit-transcripts" variant="contained" onClick={this.clearEmpty} >
+                        <Button id="clean-empty" variant="contained" onClick={this.clearEmpty} >
                             Clear Empty
                         </Button>
                     </Box>
                     <Box m={1}>
-                        <Button id="submit-transcripts" variant="contained" onClick={this.submitTranscripts} >
+                        <Button id="split-into-clips" variant="contained" onClick={this.splitIntoClips} >
                             Split Into Clips
                         </Button>
                     </Box>
                     <Box m={1}>
-                        <Button id="submit-transcripts" variant="contained" onClick={this.submitTranscripts} >
-                            Submit Transcript
+                        <Button id="submit-transcripts" variant="contained" onClick={this.saveTranscripts} >
+                            Save Transcript
                         </Button>
                     </Box>
                 </Grid>

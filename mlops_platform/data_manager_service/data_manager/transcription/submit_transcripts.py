@@ -29,18 +29,18 @@ def submit_transcripts(utterances):
         make_entry(database, new_utterance)
 
 def extract_audio_segment(utterance):
-    start = utterance["audio_info"]["start"]
-    end   = utterance["audio_info"]["end"]
+    start = utterance["utterance_info"]["audio_info"]["start"]
+    end   = utterance["utterance_info"]["audio_info"]["end"]
 
-    filename, extension = os.path.splitext(os.path.basename(utterance["audio_path"]))
+    filename, extension = os.path.splitext(os.path.basename(utterance["audio_info"]["audio_path"]))
 
     audio_filename = filename + "-" + str(start) + "-" + str(end) + extension
 
-    new_audio_path = os.path.join(os.path.dirname(os.path.dirname(utterance["audio_path"])), "transcribed_audio", audio_filename)
+    new_audio_path = os.path.join(os.path.dirname(os.path.dirname(utterance["audio_info"]["audio_path"])), "transcribed_audio", audio_filename)
 
-    logger.debug("Extracting transcript for segment: " + new_audio_path + " <- " + utterance["audio_path"])
+    logger.debug("Extracting transcript for segment: " + new_audio_path + " <- " + utterance["audio_info"]["audio_path"])
 
-    with open(utterance["audio_path"], "rb") as audio_file:
+    with open(utterance["audio_info"]["audio_path"], "rb") as audio_file:
         audio = AudioSegment.from_file(audio_file, format=extension[1:])
 
         audio_segment = audio[start:end]
@@ -53,7 +53,7 @@ def extract_audio_segment(utterance):
 
     return {
         "audio_path" : new_audio_path,
-        "label" : utterance["label"],
+        "label" : utterance["utterance_info"]["label"],
         "duration_ms" : end-start
     }
 
@@ -67,7 +67,7 @@ def make_label(utterance):
     utterance["label_path"] = label_path
 
     with open(utterance["label_path"], "w") as label_file:
-        json.dump({"label" : utterance["label"]}, label_file)
+        json.dump({"label" : utterance["label"], "utterances" : []}, label_file)
 
 
 

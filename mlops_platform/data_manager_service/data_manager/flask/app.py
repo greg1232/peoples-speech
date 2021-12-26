@@ -25,7 +25,7 @@ def upload():
 @app.route('/peoples_speech/set_labels', methods=['GET', 'POST'])
 def set_labels():
     logger.debug("Saving new labels: " + str(request.json))
-    data_manager.set_labels(request.json["view"], request.json["images"], {"label": request.json["label"]})
+    data_manager.set_labels(request.json["view"], request.json["images"], request.json["label"])
     return { "status" : "ok"}
 
 @app.route('/peoples_speech/export', methods=['GET', 'POST'])
@@ -63,6 +63,12 @@ def register_uploaded_audio():
     logger.debug("Getting upload url of file: " + str(request.json))
     data_manager.register_uploaded_audio(request.json["path"])
     return { "status" : "ok"}
+
+@app.route('/peoples_speech/get_srt_url', methods=['GET', 'POST'])
+def get_srt_url():
+    logger.debug("Getting transcripts as SRT file for audio: " + str(request.json))
+    url = data_manager.get_srt_url(request.json["uid"])
+    return { "url" : url }
 
 ###
 ## Transcription

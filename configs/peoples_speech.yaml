@@ -31,7 +31,8 @@ alignment:
         voiced_frame_ratio: 0.9
 
 align:
-    minimum_confidence: 0.0
+    minimum_return_confidence: 0.0
+    minimum_update_confidence: 40.0
 
 segment:
     type : "forced-alignment"

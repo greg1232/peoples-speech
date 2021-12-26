@@ -26,34 +26,46 @@ def get_transcription_utterances(uid):
     data_items = database.search({"tasks" : {"uid" : tasks[0]["uid"]}})
     assert len(data_items) == 1
 
-    data_item = data_items[0]
-
     segmented_utterances = []
 
-    data_item["speaker"] = "Speaker 1"
-    data_item["audio"] = get_url(data_item["audio_path"],
-                                 config["support"]["get_url"]["expiration"])
-    data_item["audio_info"] = { "start" : 0, "end" : 0 }
+    data_item = {}
 
-    if "label_path" in data_item:
-        with open(data_item["label_path"]) as label_file:
+    data_item["audio_info"] = data_items[0]
+
+    data_item["audio_info"]["audio"] = get_url(data_item["audio_info"]["audio_path"],
+                                               config["support"]["get_url"]["expiration"])
+
+    if "label_path" in data_item["audio_info"]:
+        with open(data_item["audio_info"]["label_path"]) as label_file:
             label = json.load(label_file)
 
             if "utterances" in label:
                 for utterance in label["utterances"]:
-                    segmented_utterance = data_item.copy()
-                    segmented_utterance["label"] = utterance["label"]
-                    segmented_utterance["speaker"] = utterance["speaker"]
-                    segmented_utterance["audio_info"] = utterance["audio"]
+                    segmented_utterance = {
+                        "audio_info" : data_item["audio_info"],
+                        "utterance_info" : utterance
+                    }
                     segmented_utterances.append(segmented_utterance)
             else:
+                data_item["utterance_info"] = {
+                    "confidence" : 0.0,
+                    "speaker" : "Speaker 1",
+                    "label" : label["label"],
+                    "audio_info" : { "start" : 0, "end" : data_item["duration_ms"] }
+                }
+
                 segmented_utterances.append(data_item)
 
     else:
-        data_item["label"] = ""
+        data_item["utterance_info"] = {
+            "confidence" : 0.0,
+            "speaker" : "Speaker 1",
+            "label" : "",
+            "audio_info" : { "start" : 0, "end" : data_item["audio_info"]["duration_ms"] }
+        }
         segmented_utterances.append(data_item)
 
     logger.debug("Got transcription utterances: " + str(segmented_utterances))
 
-    return segmented_utterances
+    return list(sorted(segmented_utterances, key=lambda x : x["utterance_info"]["confidence"]))
 

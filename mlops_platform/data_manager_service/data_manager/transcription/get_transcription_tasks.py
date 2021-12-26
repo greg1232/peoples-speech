@@ -8,7 +8,7 @@ def get_transcription_tasks():
 
     database = Database(config["transcription"]["task_table_name"], config)
 
-    return database.all()
+    return list(reversed(sorted(database.all(), key=lambda x: x["start_time"])))
 
 
 

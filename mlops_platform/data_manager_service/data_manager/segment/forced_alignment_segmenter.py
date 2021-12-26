@@ -47,8 +47,8 @@ def get_segments(audio_info):
             if "utterances" in label:
                 for utterance in label["utterances"]:
                     yield { "audio" : audio,
-                        "start" : utterance["audio"]["start"],
-                        "end" : utterance["audio"]["end"],
+                        "start" : utterance["audio_info"]["start"],
+                        "end" : utterance["audio_info"]["end"],
                         "max_length" : len(audio),
                         "label" : utterance["label"] }
             else:
@@ -69,9 +69,10 @@ def format_utterances(utterances):
 
     for utterance in utterances:
         formatted_utterances.append({
-            "audio" : { "start" : utterance["start"], "end" : utterance["end"]},
+            "audio_info" : { "start" : utterance["start"], "end" : utterance["end"]},
             "label" : utterance["label"],
-            "speaker" : "Speaker 1"
+            "speaker" : "Speaker 1",
+            "confidence" : utterance["confidence"]
         })
 
     return formatted_utterances

@@ -78,4 +78,5 @@ def setup_logging(arguments):
     logging.getLogger("smart_open").setLevel(logging.WARNING)
     logging.getLogger("matplotlib").setLevel(logging.WARNING)
     logging.getLogger("s3transfer").setLevel(logging.WARNING)
+    logging.getLogger("pydub.converter").setLevel(logging.WARNING)
 

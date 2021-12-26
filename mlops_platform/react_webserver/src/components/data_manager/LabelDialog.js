@@ -44,7 +44,7 @@ export default class LabelDialog extends React.Component {
                 body: JSON.stringify({
                     view : this.props.view,
                     images : this.props.images,
-                    label : this.state.label}) // body data type must match "Content-Type" header
+                    label : { label: this.state.label, utterances: [] }}) // body data type must match "Content-Type" header
             }
         )
         .then(res => res.json())
