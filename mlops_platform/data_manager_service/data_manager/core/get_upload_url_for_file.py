@@ -1,6 +1,7 @@
 
 from data_manager.util.config import get_config
 from data_manager.support.get_put_url import get_put_url
+from data_manager.support.get_existing_file_hash import get_existing_file_hash
 
 import os
 
@@ -21,5 +22,9 @@ def get_upload_url_for_file(file):
 
     logger.debug(" url: " + str(url))
 
-    return url, path
+    existing_file_hash = get_existing_file_hash(path)
+
+    logger.debug(" hash: " + str(existing_file_hash))
+
+    return url, path, existing_file_hash
 

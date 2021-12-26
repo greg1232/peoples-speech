@@ -55,8 +55,8 @@ def get_view():
 @app.route('/peoples_speech/get_upload_url_for_file', methods=['GET', 'POST'])
 def get_upload_url_for_file():
     logger.debug("Getting upload url of file: " + str(request.json))
-    url, path = data_manager.get_upload_url_for_file(request.json["file"])
-    return { "url" : url, "path" : path }
+    url, path, md5_hash = data_manager.get_upload_url_for_file(request.json["file"])
+    return { "url" : url, "path" : path, "md5_hash" : md5_hash }
 
 @app.route('/peoples_speech/register_uploaded_audio', methods=['GET', 'POST'])
 def register_uploaded_audio():

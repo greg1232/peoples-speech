@@ -6,6 +6,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText,
 
 import {TabContext, TabList, TabPanel} from '@material-ui/lab';
 import Dropzone from 'react-dropzone'
+import md5 from 'crypto-js/md5';
+
 
 export default class UploadDialog extends React.Component {
     constructor(props) {
@@ -145,6 +147,8 @@ class DropzoneUploadBox extends React.Component {
         }
 
         this.handleOnDrop = this.handleOnDrop.bind(this);
+        this.registerFile = this.registerFile.bind(this);
+        this.upload = this.upload.bind(this);
     }
 
     handleOnDrop(acceptedFiles) {
@@ -167,23 +171,42 @@ class DropzoneUploadBox extends React.Component {
             .then((data) => {
                 console.log("Got response: ", data);
 
-                this.upload(file, data["url"], data["path"]);
+                this.upload(file, data["url"], data["path"], data["md5_hash"]);
             })
             .catch(console.log)
         }
     }
 
-    upload(file, url, path) {
-        fetch(url,
-            {
-                method: 'PUT', // *GET, POST, PUT, DELETE, etc.
-                body: file
+    upload(file, url, path, md5Hash) {
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+            var binary = event.target.result;
+            var localMd5Hash = md5(binary).toString();
+
+            console.log("For file: ", file);
+            console.log("Local md5: ", localMd5Hash);
+            console.log("Remote md5: ", md5Hash);
+
+            if (md5Hash === localMd5Hash) {
+                this.registerFile(path);
             }
-        )
-        .then((data) => {
-            console.log("Got response: ", data);
-            this.registerFile(path);
-        }).catch(console.log)
+            else {
+                fetch(url,
+                    {
+                        method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+                        body: file
+                    }
+                )
+                .then((data) => {
+                    console.log("Got response: ", data);
+                    this.registerFile(path);
+                }).catch(console.log)
+
+            }
+        }.bind(this);
+
+        reader.readAsBinaryString(file);
     }
 
     registerFile(path) {

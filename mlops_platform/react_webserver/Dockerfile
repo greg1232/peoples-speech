@@ -35,6 +35,9 @@ RUN npm install recharts
 # Install google single sign on
 RUN npm install react-google-login
 
+# Install crypto
+RUN npm install crypto-js
+
 COPY . /app/react_webserver
 
 # Developement target

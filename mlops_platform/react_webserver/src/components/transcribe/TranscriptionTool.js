@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Paper, TextField, Grid, Button, Box } from '@material-ui/core';
+import { Paper, TextField, Grid, Button, Box, Pagination } from '@material-ui/core';
 import { styled } from '@material-ui/core';
 
 import AudioRangePlayer from './AudioRangePlayer'
@@ -16,7 +16,10 @@ export default class TranscriptionTool extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            utterances : []
+            utterances : [],
+            allUtterances: [],
+            page : 0,
+            pageCount : 0
         }
         this.handleUtteranceUpdate = this.handleUtteranceUpdate.bind(this);
         this.handleLabelUpdate = this.handleLabelUpdate.bind(this);
@@ -28,6 +31,7 @@ export default class TranscriptionTool extends React.Component {
         this.refresh = this.refresh.bind(this);
         this.autoLabel = this.autoLabel.bind(this);
         this.autoSegment = this.autoSegment.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
     }
 
     handleUtteranceUpdate(response) {
@@ -38,7 +42,23 @@ export default class TranscriptionTool extends React.Component {
         }
         console.log("updated utterances: ", response);
 
-        this.setState({utterances: response["utterances"]});
+        this.setState({allUtterances: response["utterances"],
+            utterances : getUtterancesForPage(response["utterances"], 1),
+            pageCount : getPageCount(response["utterances"].length),
+            page: 1
+        });
+    }
+
+    handlePageChange(event, value) {
+        let utterances = [...this.state.allUtterances];
+        for (const [index, utterance] of utterances.entries()) {
+            utterance.index = index;
+            utterance.sequence++;
+        }
+        this.setState({ page: value,
+            utterances : getUtterancesForPage(utterances, value),
+            allUtterances : utterances
+        });
     }
 
     refresh() {
@@ -66,13 +86,15 @@ export default class TranscriptionTool extends React.Component {
 
     handleLabelUpdate(utterance, label) {
         console.log("updated utterance labels: " + label.target.value);
-        let utterances = [...this.state.utterances];
+        let utterances = [...this.state.allUtterances];
         utterances[utterance.index].label = label.target.value;
-        this.setState({utterances: utterances});
+        this.setState({allUtterances: utterances,
+            utterances : getUtterancesForPage(utterances, this.state.page)
+        });
     }
 
     autoLabel() {
-        if (this.state.utterances.length === 0) {
+        if (this.state.allUtterances.length === 0) {
             return;
         }
 
@@ -99,7 +121,7 @@ export default class TranscriptionTool extends React.Component {
     }
 
     autoSegment() {
-        if (this.state.utterances.length === 0) {
+        if (this.state.allUtterances.length === 0) {
             return;
         }
 
@@ -125,29 +147,30 @@ export default class TranscriptionTool extends React.Component {
     }
 
     setStartTime(utterance, startTime) {
-        let utterances = [...this.state.utterances];
+        let utterances = [...this.state.allUtterances];
         utterances[utterance.index].utterance_info.audio_info.start = startTime * 1000.0;
-        this.setState({utterances: utterances});
+        this.setState({allUtterances: utterances});
     }
 
     setEndTime(utterance, endTime) {
-        let utterances = [...this.state.utterances];
+        let utterances = [...this.state.allUtterances];
         utterances[utterance.index].utterance_info.audio_info.end = endTime * 1000.0;
-        this.setState({utterances: utterances});
+        this.setState({allUtterances: utterances});
     }
 
     clearEmpty() {
-        let filtered = this.state.utterances.filter(utterance => utterance.utterance_info.label.length > 0);
+        let filtered = this.state.allUtterances.filter(utterance => utterance.utterance_info.label.length > 0);
         for (const [index, utterance] of filtered.entries()) {
             utterance.index = index;
             utterance.sequence++;
         }
-        this.setState({utterances: filtered});
+        this.setState({allUtterances: filtered,
+        });
     }
 
 
     saveTranscripts() {
-        let utterances = this.state.utterances.map((utterance) => (utterance.utterance_info));
+        let utterances = this.state.allUtterances.map((utterance) => (utterance.utterance_info));
         fetch(process.env.REACT_APP_API_URL + '/peoples_speech/set_labels',
             {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -177,7 +200,7 @@ export default class TranscriptionTool extends React.Component {
                   'Content-Type': 'application/json'
                   // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify({utterances : this.state.utterances})
+                body: JSON.stringify({utterances : this.state.allUtterances})
             }
         )
         .then(res => res.json())
@@ -231,6 +254,7 @@ export default class TranscriptionTool extends React.Component {
                         </>
                     ))}
                 </Grid>
+                <Pagination count={this.state.pageCount} page={this.state.page} onChange={this.handlePageChange} />
             </Box>
             <Box m={1}>
                 <Grid container justifyContent = "center" p={1}>
@@ -253,6 +277,17 @@ export default class TranscriptionTool extends React.Component {
             </Box>
         </div>;
     }
+}
+
+function getPageCount(length) {
+    return Math.ceil(length / 10).toFixed();
+}
+
+function getUtterancesForPage(utterances, page) {
+    let start = (page - 1) * 10;
+    let end = Math.min(utterances.length, start + 10);
+
+    return utterances.slice(start, end);
 }
 
 

@@ -72,7 +72,7 @@ export default class AudioRangePlayer extends React.Component {
                 endTimeLimit : padEnd(this.state.startTimeLimit, this.state.endTimeLimit, this.props.duration)
             });
         }
-        if (newValue[1] === this.state.startTimeLimit) {
+        if (newValue[0] === this.state.startTimeLimit) {
             this.setState({
                 startTimeLimit : padStart(this.state.startTimeLimit, this.state.endTimeLimit)
             });

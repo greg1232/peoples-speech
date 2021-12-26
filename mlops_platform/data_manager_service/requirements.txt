@@ -6,10 +6,9 @@ jsonlines
 tinydb
 matplotlib
 soundfile
-docker
 pyyaml
 pydub
 webrtcvad
 srt
 gruut
-git+git://github.com/greg1232/align-speech@81487f9
+git+git://github.com/greg1232/align-speech@45c396d

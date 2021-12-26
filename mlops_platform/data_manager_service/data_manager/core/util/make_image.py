@@ -22,8 +22,13 @@ def make_image(entry):
         logger.debug("Image exists: " + image_path + " ...")
         return
 
+    logger.debug("Making waveform image for: " + image_path)
+
     with open(entry["audio_path"], "rb") as audio_file:
-        audio_data, sample_rate = sf.read(audio_file)
+        with sf.SoundFile(audio_file) as sound_file:
+            frames = sound_file.frames
+            read_frames = min(1024, frames)
+            audio_data = sound_file.read(frames=read_frames)
 
     with open(image_path, "wb") as image_file:
         # plot the first 1024 samples
