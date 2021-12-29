@@ -4,6 +4,10 @@ from botocore.exceptions import ClientError
 
 from data_manager.support.aws.get_bucket_and_prefix import get_bucket_and_prefix
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 def get_existing_file_hash(path):
     s3_cli = boto3.client('s3', region_name="us-east-2")
 
@@ -15,8 +19,10 @@ def get_existing_file_hash(path):
         return s3_resp["ETag"][1:-1]
 
     except ClientError as ex:
-        if ex.response['Error']['Code'] == 'NoSuchKey':
-            logger.info('No object found - returning empty')
+        logger.debug("Got client error: " + str(ex))
+        logger.debug("Error code: " + str(ex.response['Error']['Code']))
+        if ex.response['Error']['Code'] == '404':
+            logger.debug('No object found - returning empty')
             return ""
         else:
             raise

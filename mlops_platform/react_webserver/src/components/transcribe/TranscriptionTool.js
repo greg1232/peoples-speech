@@ -87,7 +87,7 @@ export default class TranscriptionTool extends React.Component {
     handleLabelUpdate(utterance, label) {
         console.log("updated utterance labels: " + label.target.value);
         let utterances = [...this.state.allUtterances];
-        utterances[utterance.index].label = label.target.value;
+        utterances[utterance.index].utterance_info.label = label.target.value;
         this.setState({allUtterances: utterances,
             utterances : getUtterancesForPage(utterances, this.state.page)
         });
