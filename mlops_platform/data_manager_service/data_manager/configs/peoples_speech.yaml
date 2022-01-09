@@ -5,7 +5,7 @@ support:
         path: "/tmp/data_manager_db.json"
 
     get_url:
-        expiration: 3600
+        expiration: 518400
 
 data_manager:
     table_name: "data"

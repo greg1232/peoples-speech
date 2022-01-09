@@ -22,6 +22,7 @@ export default class TranscriptionTool extends React.Component {
             pageCount : 0
         }
         this.handleUtteranceUpdate = this.handleUtteranceUpdate.bind(this);
+        this.groupIntoSentences= this.groupIntoSentences.bind(this);
         this.handleLabelUpdate = this.handleLabelUpdate.bind(this);
         this.setStartTime= this.setStartTime.bind(this);
         this.setEndTime= this.setEndTime.bind(this);
@@ -120,6 +121,33 @@ export default class TranscriptionTool extends React.Component {
 
     }
 
+    groupIntoSentences() {
+        if (this.state.allUtterances.length === 0) {
+            return;
+        }
+
+        fetch(process.env.REACT_APP_API_URL + '/peoples_speech/group_into_sentences',
+            {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                headers: {
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify({
+                    view : {},
+                    images : [ {selected: true, uid: this.props.uid} ]
+                })
+            }
+        )
+        .then(res => res.json())
+        .then((data) => {
+            console.log("Got response: ", data);
+            this.refresh();
+        }).catch(console.log)
+
+    }
+
     autoSegment() {
         if (this.state.allUtterances.length === 0) {
             return;
@@ -135,8 +163,8 @@ export default class TranscriptionTool extends React.Component {
                 },
                 body: JSON.stringify({
                     view : {},
-                    images : [ {selected: true, uid: this.props.uid} ],
-                    label : this.state.utterances[0].utterance_info.label})
+                    images : [ {selected: true, uid: this.props.uid} ]
+                })
             }
         )
         .then(res => res.json())
@@ -215,6 +243,11 @@ export default class TranscriptionTool extends React.Component {
                 <Box m={1}>
                     <Button id="auto-label" variant="contained" onClick={this.autoLabel}>
                         AutoLabel
+                    </Button>
+                </Box>
+                <Box m={1}>
+                    <Button id="auto-split" variant="contained" onClick={this.groupIntoSentences}>
+                        Group Into Sentences
                     </Button>
                 </Box>
                 <Box m={1}>

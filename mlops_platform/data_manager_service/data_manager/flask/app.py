@@ -104,6 +104,12 @@ def auto_segment():
     data_manager.auto_segment(request.json["view"], request.json["images"])
     return { "status" : "ok"}
 
+@app.route('/peoples_speech/group_into_sentences', methods=['GET', 'POST'])
+def group_into_sentences():
+    logger.debug("Grouping into sentences: " + str(request.json))
+    data_manager.group_into_sentences(request.json["view"], request.json["images"])
+    return { "status" : "ok"}
+
 @app.route('/peoples_speech/submit_transcripts', methods=['GET', 'POST'])
 def submit_transcripts():
     logger.debug("Committing transcription: " + str(request.json))

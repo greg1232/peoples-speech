@@ -44,7 +44,11 @@ def convert_audio(entry):
     logger.debug("Audio is the wrong format, converting it: " + str(entry))
 
     extension = os.path.splitext(entry["audio_path"])
-    new_path = extension[0] + ".flac"
+
+    if extension[1] == ".flac":
+        new_path = extension[0] + "-converted.flac"
+    else:
+        new_path = extension[0] + ".flac"
 
     with open(entry["audio_path"], "rb") as audio_file:
         audio = AudioSegment.from_file(audio_file, format=extension[1][1:])
