@@ -33,6 +33,8 @@ alignment:
 align:
     minimum_return_confidence: 0.0
     minimum_update_confidence: 40.0
+    minimum_speech_confidence: 50.0
+    minimum_alignment_confidence: 50.0
 
 segment:
     type : "forced-alignment"
@@ -60,20 +62,20 @@ model_iteration:
         type: "remote"
         endpoint: "http://trainer:5555/remote_trainer/train"
         model:
-            type: "keyword"
-            label: "prestamo"
-            repeat: 4
+            type: "conformer"
+            repeat: 3
             batch_size: 2
             epochs: 10
             patience: 3
             shuffle_buffer_size: 16
 
-            save_path: "s3://peoples-speech/models/prestamo/efc19a0d2ebba02e26281a8235ece1c6"
+            load_path: "s3://peoples-speech/models/pretrained/tensorflor_asr_librispeech_conformer"
+            save_path: "s3://peoples-speech/models/peoples-speech/2-18-15_City_Council_Meeting"
             local_save_path: "/app/models"
-            results_path: "s3://peoples-speech/models/prestamo/efc19a0d2ebba02e26281a8235ece1c6/results.json"
+            results_path: "s3://peoples-speech/models/peoples-speech/2-18-15_City_Council_Meeting/results.json"
 
         dataset:
-            path: "s3://peoples-speech/datasets/prestamo/955c16269fbd3fe2553e203e56a0b8c6.jsonlines"
+            path: "s3://peoples-speech/datasets/peoples-speech/2-18-15_City_Council_Meeting/train.jsonlines"
 
 account:
     whitelist: ["gregory.diamos@gmail.com"]

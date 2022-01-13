@@ -1,0 +1,44 @@
+diff --git a/oss_scripts/configure.sh b/oss_scripts/configure.sh
+index 7752de9..82a7ee5 100755
+--- a/oss_scripts/configure.sh
++++ b/oss_scripts/configure.sh
+@@ -37,13 +37,14 @@ function is_macos() {
+ # Remove .bazelrc if it already exist
+ [ -e .bazelrc ] && rm .bazelrc
+
+-if [[ $(pip show tensorflow) == *tensorflow* ]] || [[ $(pip show tf-nightly) == *tf-nightly* ]] ; then
++if [[ $(pip show tensorflow-aarch64) == *tensorflow* ]] || [[ $(pip show tf-nightly) == *tf-nightly* ]] ; then
+   echo 'Using installed tensorflow.'
+ else
+   echo 'Installing tensorflow.'
+   pip install tensorflow==2.6.0
+ fi
+
++
+ if is_windows; then
+   # ICU must be built as a static library, so the external data must be built in
+   sed -i -e 's/":headers",$/":headers", ":windows_static_link_data",/' third_party/icu/BUILD.bzl
+diff --git a/oss_scripts/pip_package/setup.py b/oss_scripts/pip_package/setup.py
+index 085a8f5..754e4c9 100644
+--- a/oss_scripts/pip_package/setup.py
++++ b/oss_scripts/pip_package/setup.py
+@@ -73,7 +73,7 @@ setup(
+     cmdclass={'install': InstallPlatlib},
+     distclass=BinaryDistribution,
+     install_requires=[
+-        'tensorflow>=2.6.0, <2.7',
++        'tensorflow-aarch64>=2.6.0, <2.7',
+         'tensorflow_hub>=0.8.0',
+     ],
+     extras_require={
+diff --git a/oss_scripts/run_build.sh b/oss_scripts/run_build.sh
+index 908816e..8af2a58 100755
+--- a/oss_scripts/run_build.sh
++++ b/oss_scripts/run_build.sh
+@@ -15,5 +15,5 @@ fi
+ ./oss_scripts/configure.sh
+
+ # Build the pip package.
+-bazel build --enable_runfiles oss_scripts/pip_package:build_pip_package
++bazel build --incompatible_blacklisted_protos_requires_proto_info=false --enable_runfiles oss_scripts/pip_package:build_pip_package
+ ./bazel-bin/oss_scripts/pip_package/build_pip_package .

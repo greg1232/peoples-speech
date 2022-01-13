@@ -63,7 +63,6 @@ def main():
         tf.keras.callbacks.ModelCheckpoint(config["model"]["local_save_path"], save_best_only=True, verbose=1)
     ]
 
-
     history = model.fit(x=train_dataset,
         validation_data=test_dataset,
         verbose=2,
