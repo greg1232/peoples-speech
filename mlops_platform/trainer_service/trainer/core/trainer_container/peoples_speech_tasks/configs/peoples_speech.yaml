@@ -78,7 +78,7 @@ model_iteration:
             path: "s3://peoples-speech/datasets/peoples-speech/2-18-15_City_Council_Meeting/train.jsonlines"
 
 account:
-    whitelist: ["gregory.diamos@gmail.com"]
+    whitelist: ["gregory.diamos@gmail.com", "jfceron@mlcommons.org"]
 
 credentials:
     path: "/home/ubuntu/.aws/credentials"
