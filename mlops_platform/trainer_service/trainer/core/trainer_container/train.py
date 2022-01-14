@@ -25,7 +25,7 @@ def main():
 
     args = vars(parser.parse_args())
 
-    logger.debug("Arguments: " + str(args))
+    logger.error("Arguments: " + str(args))
 
     training_config = {}
 
@@ -58,9 +58,11 @@ def main():
     model.summary()
 
     logger.debug("Training model...")
+    callbacks = get_callbacks(config)
+
     callbacks = [
         tf.keras.callbacks.EarlyStopping(verbose=1, patience=config["model"]["patience"]),
-        tf.keras.callbacks.ModelCheckpoint(config["model"]["local_save_path"], save_best_only=True, verbose=1)
+        #tf.keras.callbacks.ModelCheckpoint(config["model"]["local_save_path"], save_best_only=True, verbose=1)
     ]
 
     history = model.fit(x=train_dataset,
@@ -69,17 +71,24 @@ def main():
         epochs=config["model"]["epochs"],
         callbacks=callbacks)
 
-    logger.debug("Loading best model from: " + config["model"]["local_save_path"])
-    model = tf.keras.models.load_model(config["model"]["local_save_path"])
+    logger.debug("Training finished with history: " + str(history.history))
 
-    logger.debug("Saving model to: " + config["model"]["save_path"])
-    model.save(config["model"]["save_path"])
+    save_model(model)
+
+    #logger.debug("Loading best model from: " + config["model"]["local_save_path"])
+    #model = tf.keras.models.load_model(config["model"]["local_save_path"])
+
+    #logger.debug("Saving model to: " + config["model"]["save_path"])
+    #model.save(config["model"]["save_path"])
 
     logger.debug("Saving results to: " + config["model"]["results_path"])
 
     with open(config["model"]["results_path"], "w") as results_file:
-        json.dump({"accuracy" : float(history.history['val_accuracy'][-1]),
+        json.dump({"accuracy" : get_accuracy(history),
             "error_analysis" : get_error_analysis(model, config)}, results_file)
+
+def get_accuracy(history):
+    return float(history.history['val_accuracy'][-1])
 
 if __name__ == "__main__":
     main()

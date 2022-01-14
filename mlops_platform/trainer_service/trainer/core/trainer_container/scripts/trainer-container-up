@@ -10,4 +10,4 @@ set -Eeuoxa pipefail
 # Get the directory of this script
 LOCAL_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-docker run --rm -it -v $HOME/.aws/credentials:/root/.aws/credentials:ro trainer-container:latest
+docker run --rm -it -v $HOME/.aws/credentials:/root/.aws/credentials:ro trainer-container:latest $@

@@ -69,7 +69,7 @@ model_iteration:
             patience: 3
             shuffle_buffer_size: 16
 
-            load_path: "s3://peoples-speech/models/pretrained/tensorflor_asr_librispeech_conformer"
+            load_path: "s3://peoples-speech/models/pretrained/tensorflow_asr_librispeech_conformer"
             save_path: "s3://peoples-speech/models/peoples-speech/2-18-15_City_Council_Meeting"
             local_save_path: "/app/models"
             results_path: "s3://peoples-speech/models/peoples-speech/2-18-15_City_Council_Meeting/results.json"

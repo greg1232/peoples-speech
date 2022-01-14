@@ -7,17 +7,17 @@ from peoples_speech_tasks.datasets.get_conformer_dataset import get_conformer_da
 
 
 def get_dataset(config, key):
-    if config["model_iteration"]["trainer"]["model"]["type"] == "keyword":
+    if config["model"]["type"] == "keyword":
         return get_keyword_dataset(config, key)
-    elif config["model_iteration"]["trainer"]["model"]["type"] == "conformer":
+    elif config["model"]["type"] == "conformer":
         return get_conformer_dataset(config, key)
 
     assert False
 
 def get_dataset_metadata(config, key):
-    if config["model_iteration"]["trainer"]["model"]["type"] == "keyword":
+    if config["model"]["type"] == "keyword":
         return get_keyword_dataset_metadata(config, key)
-    elif config["model_iteration"]["trainer"]["model"]["type"] == "conformer":
+    elif config["model"]["type"] == "conformer":
         return get_conformer_dataset_metadata(config, key)
 
     assert False
