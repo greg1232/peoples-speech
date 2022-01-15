@@ -20,4 +20,4 @@ def upload(jsonlines_path):
     with open(jsonlines_path) as jsonlines_file:
         with jsonlines.Reader(jsonlines_file) as jsonlines_reader:
             for entry in jsonlines_reader:
-                make_entry(database, entry)
+                make_entry(database, entry, config)

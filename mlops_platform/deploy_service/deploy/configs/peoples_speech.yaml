@@ -21,6 +21,9 @@ data_manager:
     upload:
         path: "s3://peoples-speech/datasets/prestamo/uploads"
 
+    conversion:
+        file_copy_buffer_size: 4096
+
 transcription:
     task_table_name: "transcription_tasks"
 

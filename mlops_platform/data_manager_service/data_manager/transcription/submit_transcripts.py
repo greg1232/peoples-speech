@@ -26,7 +26,7 @@ def submit_transcripts(utterances):
     for utterance in utterances:
         new_utterance = extract_audio_segment(utterance)
         make_label(new_utterance)
-        make_entry(database, new_utterance)
+        make_entry(database, new_utterance, config)
 
 def extract_audio_segment(utterance):
     start = utterance["utterance_info"]["audio_info"]["start"]

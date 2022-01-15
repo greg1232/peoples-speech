@@ -23,7 +23,7 @@ def register_uploaded_audio(audio_path):
     database = Database(config["data_manager"]["table_name"], config)
 
     if is_audio_file(audio_path):
-        entry = make_entry(database, {"audio_path" : audio_path})
+        entry = make_entry(database, {"audio_path" : audio_path}, config)
 
         logger.debug("Getting entry for path: " + str(entry))
 
@@ -66,9 +66,18 @@ def update_utterances(audio_path, subtitle_path, database):
         "utterances" : utterances
     }
 
-    set_label(database, {"audio_path" : audio_path}, label)
+    # handle converted files
+    logger.debug("Checking for existance of audio path to update: " + audio_path)
+    if does_file_exist_in_database(database, audio_path):
+        set_label(database, {"audio_path" : audio_path}, label)
+    else:
+        converted_audio_path = os.path.splitext(audio_path)[0] + "-converted.flac"
+        logger.debug("Checking for existance of converted audio path to update: " + converted_audio_path)
+        assert does_file_exist_in_database(database, converted_audio_path)
+
+        set_label(database, {"audio_path" : converted_audio_path}, label)
 
 def does_file_exist_in_database(database, audio_path):
-    return database.contains({"audio_path" : "audio_path"})
+    return database.contains({"audio_path" : audio_path})
 
 

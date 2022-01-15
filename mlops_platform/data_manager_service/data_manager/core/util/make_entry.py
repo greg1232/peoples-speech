@@ -9,12 +9,13 @@ from smart_open import open
 import os
 import json
 import logging
-import io
+import tempfile
 
 logger = logging.getLogger(__name__)
 
-def make_entry(database, entry):
-    convert_audio(entry)
+def make_entry(database, entry, config):
+
+    convert_audio(entry, config)
 
     entry["train"] = False
     entry["test"] = False
@@ -37,7 +38,7 @@ def make_entry(database, entry):
 
     return entry
 
-def convert_audio(entry):
+def convert_audio(entry, config):
     if is_correct_format(entry):
         return
 
@@ -56,10 +57,15 @@ def convert_audio(entry):
         audio.set_channels(1)
 
     with open(new_path, "wb") as new_file:
-        with io.BytesIO() as temp_file:
+        with tempfile.NamedTemporaryFile() as temp_file:
             audio.export(temp_file, format="flac")
 
-            new_file.write(temp_file.read())
+            buffer_size = config["data_manager"]["conversion"]["file_copy_buffer_size"]
+            data = temp_file.read(buffer_size)
+
+            while len(data) > 0:
+                new_file.write(data)
+                data = temp_file.read(buffer_size)
 
     entry["audio_path"] = new_path
 
