@@ -7,7 +7,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText,
 import {TabContext, TabList, TabPanel} from '@material-ui/lab';
 import Dropzone from 'react-dropzone'
 import md5 from 'crypto-js/md5';
-
+import CryptoJS from 'crypto-js';
 
 export default class UploadDialog extends React.Component {
     constructor(props) {
@@ -182,7 +182,7 @@ class DropzoneUploadBox extends React.Component {
 
         reader.onload = function(event) {
             var binary = event.target.result;
-            var localMd5Hash = md5(binary).toString();
+            var localMd5Hash = md5(CryptoJS.enc.Latin1.parse(binary)).toString();
 
             console.log("For file: ", file);
             console.log("Local md5: ", localMd5Hash);

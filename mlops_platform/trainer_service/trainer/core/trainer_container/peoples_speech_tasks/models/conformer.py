@@ -18,6 +18,7 @@ def get_conformer_model(global_config, dataset):
     with get_conformer_config(global_config) as config:
 
         text_featurizer = text_featurizers.SubwordFeaturizer(config.decoder_config)
+        text_featurizer.decoder_config.beam_width = global_config["model"]["beam_width"]
         speech_featurizer = speech_featurizers.TFSpeechFeaturizer(config.speech_config)
 
         conformer = Conformer(**config.model_config, vocabulary_size=text_featurizer.num_classes)
@@ -26,6 +27,7 @@ def get_conformer_model(global_config, dataset):
             prediction_shape=text_featurizer.prepand_shape,
             batch_size=global_config["model"]["batch_size"]
         )
+
         pretrained_path = os.path.join(global_config["model"]["load_path"], "latest.h5")
         with get_local_file(pretrained_path) as local_pretrained_path:
             conformer.load_weights(local_pretrained_path, by_name=True, skip_mismatch=True)
@@ -44,6 +46,8 @@ def get_conformer_model(global_config, dataset):
             global_batch_size=global_config["model"]["batch_size"],
             blank=text_featurizer.blank
         )
+
+        conformer.add_featurizers(speech_featurizer, text_featurizer)
 
     return conformer
 

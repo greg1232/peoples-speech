@@ -3,6 +3,8 @@ from peoples_speech_tasks import get_dataset
 from peoples_speech_tasks import get_model
 from peoples_speech_tasks import get_config
 from peoples_speech_tasks import get_error_analysis
+from peoples_speech_tasks import save_model
+from peoples_speech_tasks import get_callbacks
 
 import tensorflow as tf
 
@@ -38,7 +40,6 @@ def main():
         logger.error(args["config_path"])
         logger.error(str(e))
 
-
     logger.debug("Loaded training config: " + str(training_config))
 
     config = get_config(training_config["model_iteration"]["trainer"])
@@ -60,35 +61,28 @@ def main():
     logger.debug("Training model...")
     callbacks = get_callbacks(config)
 
-    callbacks = [
-        tf.keras.callbacks.EarlyStopping(verbose=1, patience=config["model"]["patience"]),
-        #tf.keras.callbacks.ModelCheckpoint(config["model"]["local_save_path"], save_best_only=True, verbose=1)
-    ]
-
     history = model.fit(x=train_dataset,
         validation_data=test_dataset,
         verbose=2,
         epochs=config["model"]["epochs"],
         callbacks=callbacks)
+    history = history.history
 
-    logger.debug("Training finished with history: " + str(history.history))
+    logger.debug("Training finished with history: " + str(history))
 
-    save_model(model)
-
-    #logger.debug("Loading best model from: " + config["model"]["local_save_path"])
-    #model = tf.keras.models.load_model(config["model"]["local_save_path"])
-
-    #logger.debug("Saving model to: " + config["model"]["save_path"])
-    #model.save(config["model"]["save_path"])
+    save_model(model, config)
 
     logger.debug("Saving results to: " + config["model"]["results_path"])
 
     with open(config["model"]["results_path"], "w") as results_file:
-        json.dump({"accuracy" : get_accuracy(history),
+        json.dump({"accuracy" : get_accuracy(history, config),
             "error_analysis" : get_error_analysis(model, config)}, results_file)
 
-def get_accuracy(history):
-    return float(history.history['val_accuracy'][-1])
+def get_accuracy(history, config):
+    if config["model"]["type"] == "keyword":
+        return float(max(history['val_accuracy']))
+    else:
+        return float(min(history['val_loss']))
 
 if __name__ == "__main__":
     main()
