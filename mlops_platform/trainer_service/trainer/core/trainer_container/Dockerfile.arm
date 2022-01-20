@@ -18,11 +18,12 @@ RUN git fetch --all --tags --prune
 RUN git checkout tags/v2.6.0
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -yqq npm
+ENV USE_BAZEL_VERSION=4.x
 RUN npm install -g @bazel/bazelisk
-COPY ./scripts/patch-tensorflow-text-for-arm.patch /app/text
-RUN git apply patch-tensorflow-text-for-arm.patch
 RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN pip install tensorflow-io==0.20.0
+COPY ./scripts/patch-tensorflow-text-for-arm.patch /app/text
+RUN git apply patch-tensorflow-text-for-arm.patch
 RUN ./oss_scripts/run_build.sh
 RUN pip install tensorflow_text-2.6.0-cp38-cp38-linux_aarch64.whl
 

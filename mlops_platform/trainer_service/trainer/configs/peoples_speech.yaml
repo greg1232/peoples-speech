@@ -67,10 +67,11 @@ model_iteration:
         model:
             type: "conformer"
             repeat: 3
-            batch_size: 2
-            epochs: 10
+            batch_size: 1
+            epochs: 2
             patience: 3
             shuffle_buffer_size: 16
+            beam_width: 0
 
             load_path: "s3://peoples-speech/models/pretrained/tensorflow_asr_librispeech_conformer"
             save_path: "s3://peoples-speech/models/peoples-speech/2-18-15_City_Council_Meeting"
