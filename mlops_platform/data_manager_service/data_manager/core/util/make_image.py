@@ -27,7 +27,7 @@ def make_image(entry):
     with open(entry["audio_path"], "rb") as audio_file:
         with sf.SoundFile(audio_file) as sound_file:
             frames = sound_file.frames
-            read_frames = min(1024, frames)
+            read_frames = min(5*16000, frames)
             audio_data = sound_file.read(frames=read_frames)
 
     with open(image_path, "wb") as image_file:

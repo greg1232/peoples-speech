@@ -21,11 +21,16 @@ def auto_label(view, audios):
 
         new_label = get_auto_label(result, config)
 
-        set_labels(view, audios, {"label" : new_label})
+        set_labels(view, audios, {"label" : new_label, "utterances" : [{
+            "audio_info" : { "start" : 0, "end" : result["duration_ms"]},
+            "label" : new_label,
+            "speaker" : "Speaker 1",
+            "confidence" : 0.0
+        }]})
 
 def get_auto_label(result, config):
     response = requests.post(
-        url=config["deploy"]["predict_endpoint"],
+        url=config["deploy"]["model"]["endpoint"],
         json={"path" : result["audio_path"]})
 
     logger.debug("Got response from deploy service: " + str(response))

@@ -11,4 +11,4 @@ pydub
 webrtcvad
 srt
 gruut
-git+git://github.com/greg1232/align-speech@d3bbe72
+git+git://github.com/greg1232/align-speech@ddd4baa

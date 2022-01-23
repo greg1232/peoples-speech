@@ -24,7 +24,7 @@ $LOCAL_DIRECTORY/sync-configs.sh
 
 PEOPLES_SPEECH_TARGET="$(uname -m)" \
 DEPLOY_TARGET_SUFFIX="$(get_deploy_target_suffix)" \
-    docker-compose -f ./scripts/docker-compose.yml up --build
+    docker-compose -f ./scripts/docker-compose.yml up --build $@
 
 
 

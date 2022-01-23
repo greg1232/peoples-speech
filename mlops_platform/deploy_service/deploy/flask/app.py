@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 def register_model():
     logger.debug("Registering new model: " + str(request.json))
     deploy.register_model(request.json["path"])
-    return { "status" : "ok"}
+    return { "status" : "ok" }
 
 @app.route('/peoples_speech/predict', methods=['GET', 'POST'])
 def predict():
@@ -28,13 +28,13 @@ def predict():
 def get_devices():
     logger.debug("Getting deployment devices: " + str(request.json))
     devices = deploy.get_devices(request.json)
-    return {"devices" : devices}
+    return { "devices" : devices }
 
 @app.route('/peoples_speech/get_metrics', methods=['GET', 'POST'])
 def get_metrics():
     logger.debug("Getting deployment metrics: " + str(request.json))
     metrics = deploy.get_metrics(request.json)
-    return {"metrics" : metrics}
+    return { "metrics" : metrics }
 
 if __name__ == '__main__':
     deploy.util.config.create_config()

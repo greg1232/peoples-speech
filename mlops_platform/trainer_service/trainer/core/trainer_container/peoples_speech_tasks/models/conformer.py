@@ -42,7 +42,7 @@ def get_conformer_model(global_config, dataset):
         )
         conformer.compile(
             optimizer=optimizer,
-            experimental_steps_per_execution=1,
+            steps_per_execution=1,
             global_batch_size=global_config["model"]["batch_size"],
             blank=text_featurizer.blank
         )

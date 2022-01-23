@@ -45,13 +45,21 @@ segment:
 deploy:
     device_table_name: "devices"
     metrics_table_name: "metrics"
-    predict_endpoint: "http://deploy:5002/peoples_speech/predict"
 
+    # Conformer
     model:
-        path: "s3://peoples-speech/models/prestamo/04dae9c2bf4f705fb8068fdb33a4d8e0/best"
-        type: "google"
-        language: "en"
-        google_cloud_storage_path: "gs://peoples-speech/google-speech-to-text-staging"
+        path: "s3://peoples-speech/models/peoples-speech/2-18-15_City_Council_Meeting"
+        endpoint: "http://deploy:5002/peoples_speech/predict"
+        storage_path: "s3://peoples-speech/auto_align/scratch"
+        type: "conformer"
+
+    # Google speech
+    #model:
+    #    path: "s3://peoples-speech/models/peoples-speech/2-18-15_City_Council_Meeting"
+    #    endpoint: "http://deploy:5002/peoples_speech/predict"
+    #    google_cloud_storage_path: "gs://peoples-speech/align_speech/scratch"
+    #    language: "en"
+    #    type: "google"
 
     test:
         audio_path: "s3://peoples-speech/examples/prestamo/audio/gtts-prestamo.flac"

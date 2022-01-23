@@ -33,5 +33,5 @@ export AWS_REGION
 export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/.aws/google-cloud-credentials.json
 
 # Start the dev environment
-PYTHONPATH=$LOCAL_DIRECTORY/.. python3 $LOCAL_DIRECTORY/../deploy/flask/test/api_tests.py
+PYTHONPATH=$LOCAL_DIRECTORY/.. python3 $LOCAL_DIRECTORY/../deploy/flask/test/api_tests.py $@
 

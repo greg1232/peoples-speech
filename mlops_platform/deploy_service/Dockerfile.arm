@@ -1,18 +1,29 @@
 FROM arm64v8/ubuntu:20.04 as arm64
 
 ENV PIP_EXTRA_INDEX_URL=https://snapshots.linaro.org/ldcg/python-cache/
-RUN apt update -yqq && apt install -yqq python3 python3-pip wget
-RUN apt install -yqq libmp3lame-dev
+RUN apt update -yqq && apt install -yqq python3 python3-pip wget libmp3lame-dev git
 
-WORKDIR /tmp
+# Install GRPCIO
+WORKDIR /app
 RUN python3 -m pip install --upgrade pip
 RUN wget https://snapshots.linaro.org/ldcg/python-cache/grpcio/grpcio-1.41.1-cp38-cp38-manylinux_2_17_aarch64.whl
 RUN mv grpcio-1.41.1-cp38-cp38-manylinux_2_17_aarch64.whl grpcio-1.41.1-cp38-none-any.whl
 RUN pip install grpcio-1.41.1-cp38-none-any.whl
 
-WORKDIR /app/deploy_service
-COPY ./requirements.txt /app/deploy_service/requirements.txt
+WORKDIR /app
+RUN apt-get install -yqq curl
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+COPY ./requirements.txt /app/requirements.txt
+ENV PATH="/root/.cargo/bin:${PATH}"
 RUN pip --no-cache-dir install -r requirements.txt
+RUN pip install --force-reinstall h5py
+RUN apt-get install -yqq llvm
+RUN pip install numba==0.53
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -yqq libsndfile1-dev
+RUN pip install sndfile
+
+WORKDIR /app/deploy_service
 
 COPY . /app/deploy_service
 

@@ -189,7 +189,7 @@ export default class ModelIteration extends React.Component {
                                             uid={row.uid}
                                             getThreshold={this.getThreshold}/>
                                     </TableCell>
-                                    <TableCell align="right"><ActionMenu model_uid={row.uid} /></TableCell>
+                                    <TableCell align="right"><ActionMenu save_path={row.save_path} /></TableCell>
 
                                   </TableRow>
                                 ))}
@@ -227,14 +227,14 @@ function ActionMenu(props) {
   };
 
   const handleDeploy = () => {
-    fetch(process.env.REACT_APP_DEPOY_API_URL + '/peoples_speech/register_model',
+    fetch(process.env.REACT_APP_DEPLOY_API_URL + '/peoples_speech/register_model',
         {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
             headers: {
               'Content-Type': 'application/json'
             },
-            body: { model_uid: props.model_uid }
+            body: JSON.stringify({ path : props.save_path })
         }
     )
     .then(res => res.json())

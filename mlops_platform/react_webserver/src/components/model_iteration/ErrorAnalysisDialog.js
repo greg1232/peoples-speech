@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Card, CardMedia, CardContent, Typography, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
+import { Card, CardMedia, CardContent, Typography, Button, Dialog,
+         DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 
 export default class ErrorAnalysisDialog extends React.Component {
     constructor(props){

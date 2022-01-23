@@ -41,8 +41,10 @@ def update_subtitle(subtitle_path, database):
     '''Adds the subtitles to the audio file with the same name.'''
 
     audio_path = os.path.splitext(subtitle_path)[0] + ".flac"
+    converted_audio_path = os.path.splitext(subtitle_path)[0] + "-converted.flac"
 
-    if not does_file_exist_in_database(database, audio_path):
+    if (not does_file_exist_in_database(database, audio_path)
+        and not does_file_exist_in_database(database, converted_audio_path)):
         return
 
     update_utterances(audio_path, subtitle_path, database)

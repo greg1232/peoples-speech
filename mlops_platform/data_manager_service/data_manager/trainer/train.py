@@ -53,8 +53,9 @@ def record_training_job(database, train_config_path, training_config):
         "uid" : training_config["model_iteration"]["trainer"]["uid"],
         "train_config_path" : train_config_path,
         "results_path" : training_config["model_iteration"]["trainer"]["model"]["results_path"],
+        "save_path" : training_config["model_iteration"]["trainer"]["model"]["save_path"],
         "status" : "created",
-        "start_time": int( time.time_ns() / 1000000 ),
+        "start_time": int( time.time() ),
         "end_time" : "still running...",
         "accuracy" : "still running..."
     }
@@ -73,7 +74,7 @@ def update_training_job(database, train_config_path, training_config, job):
     except:
         job["status"] = "failed"
 
-    job["end_time"] = int( time.time_ns() / 1000000 )
+    job["end_time"] = int( time.time() )
 
     database.update(job, ("train_config_path", train_config_path) )
 
