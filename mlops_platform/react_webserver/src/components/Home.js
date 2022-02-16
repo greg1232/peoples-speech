@@ -22,9 +22,9 @@ export default function Home() {
         A data centric platform for speech.
 
         <ul>
-            <li><b>Data Management</b>.  Upload, manage, clean, and iteratively improve your audio data.</li>
-            <li><b>Model Iteration</b>.  Iteratively train, augment, and refine your speech models using error analysis.</li>
-            <li><b>Deploy</b>.  Deploy your speech models to the edge.</li>
+            <li><b>Data Management</b>.  Upload, manage, clean, and iteratively improve your conversation data.</li>
+            <li><b>Model Iteration</b>.  Iteratively train, augment, and refine your conversation models using error analysis.</li>
+            <li><b>Deploy</b>.  Deploy and integrate your conversation models to the edge.</li>
         </ul>
     </div>
   );

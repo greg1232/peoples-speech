@@ -2,7 +2,7 @@
 import React from 'react';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText,
-    DialogTitle, Paper, Box, Tab, Grid, TextField } from '@material-ui/core';
+    DialogTitle, Paper, Box, Tab, Grid, TextField, Backdrop, CircularProgress } from '@material-ui/core';
 
 import {TabContext, TabList, TabPanel} from '@material-ui/lab';
 import Dropzone from 'react-dropzone'
@@ -143,17 +143,19 @@ class DropzoneUploadBox extends React.Component {
         super(props)
 
         this.state = {
-            files : []
+            files : [],
+            isUploading : false
         }
 
         this.handleOnDrop = this.handleOnDrop.bind(this);
         this.registerFile = this.registerFile.bind(this);
         this.upload = this.upload.bind(this);
+        this.uploadingFinished = this.uploadingFinished.bind(this);
     }
 
     handleOnDrop(acceptedFiles) {
         console.log(acceptedFiles);
-        this.setState({files: acceptedFiles});
+        this.setState({files: acceptedFiles, isUploading : true});
 
         for (const file of acceptedFiles) {
             fetch(process.env.REACT_APP_API_URL + '/peoples_speech/get_upload_url_for_file',
@@ -222,7 +224,12 @@ class DropzoneUploadBox extends React.Component {
         )
         .then((data) => {
             console.log("Got response: ", data);
+            this.uploadingFinished();
         }).catch(console.log)
+    }
+
+    uploadingFinished() {
+        this.setState({isUploading : false});
     }
 
     render() {
@@ -241,6 +248,13 @@ class DropzoneUploadBox extends React.Component {
                                 <input {...getInputProps()} />
                                 <p>Drag 'n' drop some files here, or click to select files</p>
                             </div>
+                            <Backdrop
+                                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                                open={this.state.isUploading}
+                                onClick={this.uploadingFinished}
+                            >
+                                <CircularProgress color="inherit" />
+                            </Backdrop>
                         </Paper>
                         <aside>
                             <h4>Files</h4>

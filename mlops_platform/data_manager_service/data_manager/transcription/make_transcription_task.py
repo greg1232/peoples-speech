@@ -22,5 +22,6 @@ def make_transcription_task(view, images):
         result["end_time"] = time.time()
         result["completion_percent"] = 0.0
         if not database.contains({"uid" : result["uid"]}):
+            logger.debug("Added task: " + str(result))
             database.insert(result)
 

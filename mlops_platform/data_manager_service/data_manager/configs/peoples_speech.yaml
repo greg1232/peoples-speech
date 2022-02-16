@@ -52,6 +52,7 @@ deploy:
         endpoint: "http://deploy:5002/peoples_speech/predict"
         storage_path: "s3://peoples-speech/auto_align/scratch"
         type: "conformer"
+        timestamp_offset: -0.6
 
     # Google speech
     #model:

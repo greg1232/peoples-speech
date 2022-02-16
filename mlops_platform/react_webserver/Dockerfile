@@ -38,6 +38,9 @@ RUN npm install react-google-login
 # Install crypto
 RUN npm install crypto-js
 
+# Install react markdown
+RUN npm install react-markdown
+
 COPY . /app/react_webserver
 
 # Developement target

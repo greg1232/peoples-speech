@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { Box, Tab, Tabs } from '@material-ui/core';
 
+import LabelBook from './data_manager/LabelBook.js'
 import DataBrowser from './data_manager/DataBrowser.js'
 import TranscriptionTasks from './transcribe/TranscriptionTasks.js'
 import TranscriptionTool from './transcribe/TranscriptionTool.js'
@@ -17,11 +18,11 @@ export default function DataManager(props) {
   };
 
   const switchToTasks = () => {
-    setValue(1);
+    setValue(2);
   };
 
   const switchToTool = () => {
-    setValue(2);
+    setValue(3);
   };
 
   React.useEffect(() => {
@@ -48,13 +49,15 @@ export default function DataManager(props) {
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>
       <Tabs orientation="vertical" value={value} onChange={handleChange} aria-label="data-manager-tabs" sx={{ borderRight: 1, borderColor: 'divider' }} >
-        <Tab label="Dataset" {...a11yProps(0)} />
-        <Tab label="Jobs" {...a11yProps(1)} />
-        <Tab label="Transcribe" {...a11yProps(2)} />
+        <Tab label="Label Book" {...a11yProps(0)} />
+        <Tab label="Dataset" {...a11yProps(1)} />
+        <Tab label="Jobs" {...a11yProps(2)} />
+        <Tab label="Transcribe" {...a11yProps(3)} />
       </Tabs>
-      <TabPanel value={value} index={0}> <DataBrowser switchToTasks={switchToTasks} /> </TabPanel>
-      <TabPanel value={value} index={1}> <TranscriptionTasks switchToTool={switchToTool} setUid={setUid} /> </TabPanel>
-      <TabPanel value={value} index={2}> <TranscriptionTool uid={uid} /> </TabPanel>
+      <TabPanel value={value} index={0}> <LabelBook /> </TabPanel>
+      <TabPanel value={value} index={1}> <DataBrowser switchToTasks={switchToTasks} /> </TabPanel>
+      <TabPanel value={value} index={2}> <TranscriptionTasks switchToTool={switchToTool} setUid={setUid} /> </TabPanel>
+      <TabPanel value={value} index={3}> <TranscriptionTool uid={uid} /> </TabPanel>
     </Box>
   );
 }
