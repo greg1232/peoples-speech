@@ -46,7 +46,7 @@ export default class DeploymentMetrics extends React.Component {
     render() {
         return (
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table sx={{ minWidth: 350 }} aria-label="deployment-metrics-table">
                     <TableHead>
                         <TableRow>
                             <TableCell>Name</TableCell>

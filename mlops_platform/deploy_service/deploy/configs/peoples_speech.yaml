@@ -62,6 +62,9 @@ deploy:
     #    language: "en"
     #    type: "google"
 
+    upload:
+        path: "s3://peoples-speech/deploy/inference/prestamo/uploads"
+
     test:
         audio_path: "s3://peoples-speech/examples/prestamo/audio/gtts-prestamo.flac"
         audio_label: "none"

@@ -41,6 +41,9 @@ RUN npm install crypto-js
 # Install react markdown
 RUN npm install react-markdown
 
+# Install draft
+RUN npm install draft-js
+
 COPY . /app/react_webserver
 
 # Developement target

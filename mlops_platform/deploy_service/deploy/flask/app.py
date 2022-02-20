@@ -36,6 +36,18 @@ def get_metrics():
     metrics = deploy.get_metrics(request.json)
     return { "metrics" : metrics }
 
+@app.route('/peoples_speech/get_upload_url_for_file', methods=['GET', 'POST'])
+def get_upload_url_for_file():
+    logger.debug("Getting upload url for file for classification: " + str(request.json))
+    url, path = deploy.get_upload_url_for_file(request.json["file"])
+    return { "url" : url, "path" : path }
+
+@app.route('/peoples_speech/register_uploaded_audio', methods=['GET', 'POST'])
+def register_uploaded_audio():
+    logger.debug("Getting upload url of file for classification: " + str(request.json))
+    deploy.register_uploaded_audio(request.json["path"])
+    return { "status" : "ok"}
+
 if __name__ == '__main__':
     deploy.util.config.create_config()
     deploy.devices.initialize()

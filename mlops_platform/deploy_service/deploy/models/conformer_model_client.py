@@ -45,6 +45,7 @@ class ConformerModelClient:
             score = 1.0
 
             result = { "score" : score,
+                "tags" : "qualifying question",
                 "label" : "".join([chr(u) for u in transcript]),
                 "start_times" : start_times.numpy().tolist(),
                 "end_times" : end_times.numpy().tolist() }

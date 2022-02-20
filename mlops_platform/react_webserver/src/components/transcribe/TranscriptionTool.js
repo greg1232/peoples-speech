@@ -24,6 +24,7 @@ export default class TranscriptionTool extends React.Component {
         this.handleUtteranceUpdate = this.handleUtteranceUpdate.bind(this);
         this.groupIntoSentences= this.groupIntoSentences.bind(this);
         this.handleLabelUpdate = this.handleLabelUpdate.bind(this);
+        this.handleTagUpdate = this.handleTagUpdate.bind(this);
         this.setStartTime= this.setStartTime.bind(this);
         this.setEndTime= this.setEndTime.bind(this);
         this.clearEmpty = this.clearEmpty.bind(this);
@@ -39,6 +40,7 @@ export default class TranscriptionTool extends React.Component {
 
         for (const [index, utterance] of response["utterances"].entries()) {
             utterance.index = index;
+            utterance.tag = "";
             utterance.sequence = 0;
         }
         console.log("updated utterances: ", response);
@@ -89,6 +91,15 @@ export default class TranscriptionTool extends React.Component {
         console.log("updated utterance labels: " + label.target.value);
         let utterances = [...this.state.allUtterances];
         utterances[utterance.index].utterance_info.label = label.target.value;
+        this.setState({allUtterances: utterances,
+            utterances : getUtterancesForPage(utterances, this.state.page)
+        });
+    }
+
+    handleTagUpdate(utterance, tag) {
+        console.log("updated utterance labels: " + tag.target.value);
+        let utterances = [...this.state.allUtterances];
+        utterances[utterance.index].utterance_info.tag = tag.target.value;
         this.setState({allUtterances: utterances,
             utterances : getUtterancesForPage(utterances, this.state.page)
         });
@@ -257,10 +268,10 @@ export default class TranscriptionTool extends React.Component {
                 </Box>
             </Grid>
             <Box m={1}>
-                <Grid container spacing={2} columns={12} sx={{ minWidth: 700, maxWidth: 800 }}>
+                <Grid container spacing={2} columns={12} sx={{ minWidth: 900, maxWidth: 1000 }}>
                     {this.state.utterances.map((utterance) => (
                         <>
-                        <Grid item xs={10}>
+                        <Grid item xs={8}>
                             <Item>
                                 <TextField key={"label-" + utterance.index} id={"label-" + utterance.index} label={utterance.utterance_info.speaker}
                                     variant="outlined" value={utterance.utterance_info.label}
@@ -269,6 +280,19 @@ export default class TranscriptionTool extends React.Component {
                                     style = {{width: "95%"}}
                                     onChange = {(label) => {
                                         this.handleLabelUpdate(utterance, label);
+                                    }} />
+
+                            </Item>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Item>
+                                <TextField key={"tag-" + utterance.index} id={"tag-" + utterance.index} label={"Tag"}
+                                    variant="outlined" value={utterance.utterance_info.tag}
+                                    multiline
+                                    maxRows={Infinity}
+                                    style = {{width: "95%"}}
+                                    onChange = {(label) => {
+                                        this.handleTagUpdate(utterance, label);
                                     }} />
 
                             </Item>
